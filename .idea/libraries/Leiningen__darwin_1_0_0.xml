@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Leiningen: darwin:1.0.0">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/darwin/darwin/1.0.0/darwin-1.0.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
