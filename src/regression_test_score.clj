@@ -171,7 +171,7 @@ xys
 ;; @@
 (defn ind-score [indv]
   
-  (fit-poly (:genotype indv) xys test-data)
+  (:sse (fit-poly (:genotype indv) xys test-data))
   
   
   )
