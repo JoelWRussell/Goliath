@@ -39,3 +39,7 @@
                                             #(genetics/random-full-tree functions terminals 3)))]
      :score-functions    score-functions
      :reporting-function (fn [z] (print ".") (flush))}))
+
+(defn golliath-score
+      []
+      (print "space holder"))
