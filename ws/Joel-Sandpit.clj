@@ -46,18 +46,22 @@
 ; Created two empty chidren of length equal to partents.
 ; Assign genes from parent one to child one with probability X
 ; Else assign gene from parent one to child to poraility 1-X
-; 
+; So long as the child genes do not exceed thier parental legnths add genes from parent 1 to offspring with the same probaiblity of.
 
-(defn 
-  [poly]
-  
-  )
+
+
+(defn splice 
+  [parent-gene child]
+  (conj child parent-gene))
+
 
 (defn cross-over [poly1 poly2]
   (let [c1 []
     	c2 []]  
 (mapv (fn [poly1 poly2] (conj [(vec x)] (vec y))) poly1 poly2)
    ))
+
+(contains? [[1 3] [1 2]] [1 3])
 
 
 ; the first genotype from parent 1 goes to child 1 with probability x
@@ -69,7 +73,7 @@
 
 ;; @@
 ;; =>
-;;; {"type":"html","content":"<span class='clj-var'>#&#x27;goliath/cross-over</span>","value":"#'goliath/cross-over"}
+;;; {"type":"html","content":"<span class='clj-unkown'>false</span>","value":"false"}
 ;; <=
 
 ;; @@

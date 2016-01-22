@@ -70,17 +70,27 @@
   
 ;;  (vec (conj (set indv) new-gene)))
  
-(defn gene-add
-  [individuall [ymax xmax]]
-  (let [new-indv (vec (conj (set (:genotype individuall)) (rd-gene [ymax xmax])))
-        indv (:genotype individuall)]
+;(defn gene-add
+ ; [individuall [ymax xmax]]
+  ;(let [new-indv (vec (conj (set (:genotype individuall)) (rd-gene [ymax xmax])))
+   ;     indv (:genotype individuall)]
+   ; (if (= (count new-indv) (count indv))
+    ;  (gene-add indv [ymax xmax])
+    ; new-indv
+      )))
+
+
+
+ (defn gene-add
+  [indiv [ymax xmax]]
+   "Adds a new gene to a GA individual. The gene will be unique addition to the individual"
+  (let [new-indv (vec (conj (set indiv) (rd-gene [ymax xmax])))
+        indv indiv]
     (if (= (count new-indv) (count indv))
       (gene-add indv [ymax xmax])
      new-indv
-      ))
-  
-  )
- 
+      )))
+
  
  
 ;; @@
