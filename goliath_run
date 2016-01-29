@@ -1,0 +1,42 @@
+;; gorilla-repl.fileformat = 1
+
+;; **
+;;; # Golliath
+;;; 
+;;; Welcome to Golliath :-)
+;; **
+
+;; @@
+(ns golliath
+  (:require [clojure.repl :as repl]
+            [clojure.pprint :as pprint]
+            [clojure.walk :as walk]
+            [clojure.zip :as zip]
+            [gorilla-plot.core :as plot]
+            [gorilla-repl.table :as table]
+            [gorilla-repl.html :as html]
+    		[darwin.core :as darwin]
+            [darwin.evolution.metrics :as metrics]
+            [algebolic.expression.core :as expression]
+            [algebolic.expression.tree :as tree]
+            [algebolic.expression.genetics :as genetics]
+            [algebolic.expression.score :as score]
+            [algebolic.expression.render :as spea-render]
+            [algebolic.expression.interpreter :as interpreter]
+            [darwin.evolution.core :as evolution]
+            [darwin.evolution.metrics :as metrics]
+            [darwin.evolution.reproduction :as reproduction]
+            [darwin.evolution.scoring :as scoring]
+            [darwin.evolution.selection :as selection]
+            [darwin.evolution.transform :as transform]
+            [darwin.evolution.pareto :as pareto]
+            [darwin.algorithms.spea2 :as spea2]
+            [criterium.core :as criterium]))
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-nil'>nil</span>","value":"nil"}
+;; <=
+
+;; @@
+
+;; @@
