@@ -19,11 +19,11 @@
 ;; <=
 
 ;; @@
-(def candidate {:score -3 :genotype [[0 1] [2 0]]})
+(def candidate {:score -3 :genotype [[0 4 5 1] [2 3 1 0]]})
 (ts/ind-score candidate)
 ;; @@
 ;; =>
-;;; {"type":"html","content":"<span class='clj-double'>1.2112701606538574E-27</span>","value":"1.2112701606538574E-27"}
+;;; {"type":"html","content":"<span class='clj-double'>35.35431659796228</span>","value":"35.35431659796228"}
 ;; <=
 
 ;; **
@@ -32,10 +32,10 @@
 ;; **
 
 ;; @@
-(:genotype individual)
+(def geno (:genotype candidate))
 ;; @@
 ;; =>
-;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-long'>0</span>","value":"0"},{"type":"html","content":"<span class='clj-long'>1</span>","value":"1"}],"value":"[0 1]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-long'>2</span>","value":"2"},{"type":"html","content":"<span class='clj-long'>0</span>","value":"0"}],"value":"[2 0]"}],"value":"[[0 1] [2 0]]"}
+;;; {"type":"html","content":"<span class='clj-var'>#&#x27;goliath.src/geno</span>","value":"#'goliath.src/geno"}
 ;; <=
 
 ;; **
@@ -43,55 +43,72 @@
 ;; **
 
 ;; @@
-(defn rd-gene
-  [[ymax xmax]]
-  [(rand-int ymax) (rand-int xmax)])
+;;(defn rd-gene
+;;  [powermax]
+;;  [(rand-int powermax) (rand-int powermax)])
 
-(rd-gene [3 5])
+;; (rd-gene 8)
 
 ;; @@
+
+;; @@
+(defn rd-gene 
+  [powermax spmax length]
+  "where powermax is the maximum power of any given variable, spmax is the max sum of the powers and length is the length of the gene to be generated. spmax is checked and the function re-called if the gene is invalid"
+  (let [new-gene (vec (repeatedly length #(rand-int (+ 1 powermax)))) sp (apply + new-gene)]
+    (if (< sp spmax) new-gene
+      (rd-gene powermax spmax length))
+  )
+ )
+
+
+(rd-gene 10 10 4)
+;; @@
 ;; =>
-;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-unkown'>2</span>","value":"2"},{"type":"html","content":"<span class='clj-unkown'>1</span>","value":"1"}],"value":"[2 1]"}
+;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-unkown'>0</span>","value":"0"},{"type":"html","content":"<span class='clj-unkown'>6</span>","value":"6"},{"type":"html","content":"<span class='clj-unkown'>3</span>","value":"3"},{"type":"html","content":"<span class='clj-unkown'>0</span>","value":"0"}],"value":"[0 6 3 0]"}
+;; <=
+
+;; @@
+(count (first (:genotype {:score 5 :genotype [[3 5 5 6]]})))
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-unkown'>4</span>","value":"4"}
 ;; <=
 
 ;; @@
 (defn gene-replace
-  [indv [ymax xmax]]
-(let [new-indv (assoc indv (rand-int (count indv)) (rd-gene [ymax xmax]))]
+  [indv powermax spmax]
+  "Replaces a gene from an individual (with a unique gene). In a given gene (term in the polynomial) no variable can have a higher power than powermax and the total powers of all variables cannot exceed spmax (sum power max)."
+(let [length (count (first indv)) new-gene (rd-gene powermax spmax length) new-indv (assoc indv (rand-int (count indv)) new-gene) sp (apply + new-gene)]
+  
   (if (= (count (set new-indv)) (count new-indv))
     new-indv
-    (gene-replace indv [ymax xmax])
-    ))   
-)
-      
-      
-;;(defn gene-add
-;;  [indv new-gene]
-  
-;;  (vec (conj (set indv) new-gene)))
+    (gene-replace indv powermax spmax)
  
-;(defn gene-add
- ; [individuall [ymax xmax]]
-  ;(let [new-indv (vec (conj (set (:genotype individuall)) (rd-gene [ymax xmax])))
-   ;     indv (:genotype individuall)]
-   ; (if (= (count new-indv) (count indv))
-    ;  (gene-add indv [ymax xmax])
-    ; new-indv
-      )))
+ )))   
+ 
+ ;;(cond
+ ;;   (and (= (count (set new-indv)) (count new-indv)) (< sp spmax)) new-indv
+ ;;   :else (gene-replace indv powermax spmax))
+  
 
 
 
  (defn gene-add
-  [indiv [ymax xmax]]
-   "Adds a new gene to a GA individual. The gene will be unique addition to the individual"
-  (let [new-indv (vec (conj (set indiv) (rd-gene [ymax xmax])))
-        indv indiv]
-    (if (= (count new-indv) (count indv))
-      (gene-add indv [ymax xmax])
+  [indiv powermax spmax]
+   "Adds a new gene to a GA individual. The gene will be unique addition to the individual. In a given gene (term in the polynomial) no variable can have a higher power than powermax and the total powers of all variables cannot exceed spmax (sum power max)."
+  (let [length (count (first indiv)) new-gene (rd-gene powermax spmax length) new-indv (vec (conj (set indiv) new-gene)) sp (apply + new-gene)]
+   
+      (if (= (count new-indv) (count indiv))
+      (gene-add indiv powermax spmax)
      new-indv
       )))
 
- 
+
+  ;;   (cond 
+  ;;  (or (= (count new-indv) (count indiv)) (> sp spmax)) (gene-add indiv powermax spmax)
+  ;;  :else new-indv)
+  ;;  ))
  
 ;; @@
 ;; =>
@@ -99,17 +116,17 @@
 ;; <=
 
 ;; @@
-(gene-add candidate [2 2] )
+(gene-add geno 10 10)
 ;; @@
 ;; =>
-;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-unkown'>1</span>","value":"1"},{"type":"html","content":"<span class='clj-unkown'>0</span>","value":"0"}],"value":"[1 0]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-long'>2</span>","value":"2"},{"type":"html","content":"<span class='clj-long'>0</span>","value":"0"}],"value":"[2 0]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-long'>0</span>","value":"0"},{"type":"html","content":"<span class='clj-long'>1</span>","value":"1"}],"value":"[0 1]"}],"value":"[[1 0] [2 0] [0 1]]"}
+;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-long'>2</span>","value":"2"},{"type":"html","content":"<span class='clj-long'>3</span>","value":"3"},{"type":"html","content":"<span class='clj-long'>1</span>","value":"1"},{"type":"html","content":"<span class='clj-long'>0</span>","value":"0"}],"value":"[2 3 1 0]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-long'>0</span>","value":"0"},{"type":"html","content":"<span class='clj-long'>4</span>","value":"4"},{"type":"html","content":"<span class='clj-long'>5</span>","value":"5"},{"type":"html","content":"<span class='clj-long'>1</span>","value":"1"}],"value":"[0 4 5 1]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-unkown'>4</span>","value":"4"},{"type":"html","content":"<span class='clj-unkown'>0</span>","value":"0"},{"type":"html","content":"<span class='clj-unkown'>1</span>","value":"1"},{"type":"html","content":"<span class='clj-unkown'>4</span>","value":"4"}],"value":"[4 0 1 4]"}],"value":"[[2 3 1 0] [0 4 5 1] [4 0 1 4]]"}
 ;; <=
 
 ;; @@
-(gene-replace (:genotype individual) (rd-gene [3 3]))
+(gene-replace geno 10 10)
 ;; @@
 ;; =>
-;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-unkown'>0</span>","value":"0"},{"type":"html","content":"<span class='clj-unkown'>1</span>","value":"1"}],"value":"[0 1]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-long'>2</span>","value":"2"},{"type":"html","content":"<span class='clj-long'>0</span>","value":"0"}],"value":"[2 0]"}],"value":"[[0 1] [2 0]]"}
+;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-unkown'>3</span>","value":"3"},{"type":"html","content":"<span class='clj-unkown'>2</span>","value":"2"},{"type":"html","content":"<span class='clj-unkown'>0</span>","value":"0"},{"type":"html","content":"<span class='clj-unkown'>1</span>","value":"1"}],"value":"[3 2 0 1]"},{"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-long'>2</span>","value":"2"},{"type":"html","content":"<span class='clj-long'>3</span>","value":"3"},{"type":"html","content":"<span class='clj-long'>1</span>","value":"1"},{"type":"html","content":"<span class='clj-long'>0</span>","value":"0"}],"value":"[2 3 1 0]"}],"value":"[[3 2 0 1] [2 3 1 0]]"}
 ;; <=
 
 ;; @@
