@@ -171,7 +171,7 @@ xys
 ;; @@
 (defn ind-score [indv]
   
-  (:sse (fit-poly (:genotype indv) xys test-data))
+  (:sse (fit-poly indv xys test-data))
   )
 ;; @@
 ;; =>
@@ -186,7 +186,7 @@ xys
 ;; <=
 
 ;; @@
-(ind-score individual)
+(ind-score (:genotype individual))
 ;; @@
 ;; =>
 ;;; {"type":"html","content":"<span class='clj-double'>1.2112701606538574E-27</span>","value":"1.2112701606538574E-27"}
