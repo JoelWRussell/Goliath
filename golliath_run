@@ -1,0 +1,12 @@
+;; gorilla-repl.fileformat = 1
+
+;; **
+;;; # Golliath
+;;; 
+;;; Welcome to gorilla :-)
+;; **
+
+;; @@
+(ns resilient-temple
+  (:require [gorilla-plot.core :as plot]))
+;; @@
