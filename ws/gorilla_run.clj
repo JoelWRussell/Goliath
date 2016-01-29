@@ -37,6 +37,14 @@
 ;; <=
 
 ;; **
+;;; **Genetic-algorithm declared variables required in the run**
+;; **
+
+;; @@
+(def prob_inheritance 0.75)   ;probability that terms are directly inherited from parent to child.
+;; @@
+
+;; **
 ;;; ##Create New Individual 
 ;;; 
 ;; **
@@ -71,14 +79,11 @@
 ;; @@
 (defn cross-over
   "takes two individuals and crosses over the polynomial from one parent to another under a weighted selection bias" 
-  [parent-1 parent-2 prob] 
-  (let [offspring (mapv vec (mapv set (mapv concat (distribute-parent parent-1 prob) (reverse (distribute-parent parent-2 prob)))))]
+  [parent-1 parent-2] 
+  (let [offspring (mapv vec (mapv set (mapv concat (distribute-parent (:genotype parent-1) prob_inheritance) (reverse (distribute-parent (:genotype parent-2) prob_inheritance)))))]
     [(offspring 0) (offspring 1)]
     ))
 ;; @@
-;; =>
-;;; {"type":"html","content":"<span class='clj-var'>#&#x27;goliath/cross-over</span>","value":"#'goliath/cross-over"}
-;; <=
 
 ;; @@
 (cross-over (create-genotype 6 4 2) (create-genotype 6 4 2) 0.75)
