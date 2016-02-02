@@ -1,0 +1,552 @@
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[         0,          0]
+NotebookDataLength[     18259,        551]
+NotebookOptionsPosition[     16221,        473]
+NotebookOutlinePosition[     16573,        489]
+CellTagsIndexPosition[     16530,        486]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Exploring and understanding the ELSolver nb", "Subchapter",
+ CellChangeTimes->{{3.663179514387648*^9, 3.663179533152073*^9}}],
+
+Cell[RawData[""], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[RawData[""], "Input"],
+
+Cell[RawData[""], "Output"]
+}, Open  ]],
+
+Cell[RawData[""], "Input"],
+
+Cell[RawData[""], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[RawData[""], "Input"],
+
+Cell[RawData[""], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[RawData[""], "Input"],
+
+Cell[RawData[""], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[RawData[""], "Input"],
+
+Cell[RawData[""], "Output"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[RawData[""], "Input"],
+
+Cell[RawData[""], "Output"]
+}, Open  ]]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Building a \
+\[OpenCurlyDoubleQuote]polynomialiser\[CloseCurlyDoubleQuote]", "Subchapter",
+ CellChangeTimes->{{3.6631795608630238`*^9, 3.663179569260229*^9}}],
+
+Cell[TextData[{
+ "Want to build a function such that f{{a, b, c, d}, ..... {w, x, y, z}} = ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{" ", 
+    RowBox[{
+     RowBox[{
+      RowBox[{
+       RowBox[{
+        SubsuperscriptBox["\[Theta]", "1", "a"], 
+        SubsuperscriptBox["\[Theta]", "2", "b"], " ", 
+        SubsuperscriptBox["\[Omega]", "1", "c"], " ", 
+        SubsuperscriptBox["\[Omega]", "2", "d"]}], "+"}], " ", "..."}], " ", 
+     "+", " ", 
+     RowBox[{
+      SubsuperscriptBox["\[Theta]", "1", "w"], 
+      SubsuperscriptBox["\[Theta]", "2", "x"], " ", 
+      SubsuperscriptBox["\[Omega]", "1", "y"], " ", 
+      SubsuperscriptBox["\[Omega]", "2", "z"]}]}]}], TraditionalForm]]],
+ " where ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SubscriptBox["\[Omega]", "i"], " ", "=", " ", 
+    RowBox[{
+     SubscriptBox[
+      OverscriptBox["\[Theta]", "."], 
+      RowBox[{"i", " "}]], ".", " "}]}], TraditionalForm]]],
+ "\n\nThe genetic algorithm will take care that no two monomials have an \
+identical list of coefficients. "
+}], "Text",
+ CellChangeTimes->{{3.6631798742481194`*^9, 3.6631799536866493`*^9}, {
+  3.663180025459798*^9, 3.66318037271795*^9}, {3.663180469679744*^9, 
+  3.663180601626525*^9}, {3.663180648031229*^9, 3.663180649897962*^9}, {
+  3.6631807042675877`*^9, 3.663180713482264*^9}, {3.663180943962439*^9, 
+  3.6631809866980743`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[TextData[StyleBox["Taking a list of coefficients and making a monomial", \
+"Subsubsection"]], "Subsection",
+ CellChangeTimes->{{3.663179612478297*^9, 3.663179624878772*^9}, {
+  3.6631796559015837`*^9, 3.663179659879941*^9}, {3.663180993689764*^9, 
+  3.66318099764694*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"monomialExpander", "[", 
+   RowBox[{"{", 
+    RowBox[{"a_", ",", " ", "b_", ",", " ", "c_", ",", " ", "d_"}], "}"}], 
+   "]"}], " ", ":=", " ", 
+  RowBox[{
+   RowBox[{"RandomReal", "[", "]"}], "*", 
+   SuperscriptBox[
+    RowBox[{"(", "\[Theta]1", ")"}], "a"], "*", 
+   SuperscriptBox[
+    RowBox[{"(", "\[Theta]2", ")"}], "b"], "*", 
+   SuperscriptBox[
+    RowBox[{"\[Theta]1", "'"}], "c"], "*", " ", 
+   SuperscriptBox[
+    RowBox[{"\[Theta]2", "'"}], "d"]}]}]], "Input",
+ CellChangeTimes->{{3.66316726743694*^9, 3.6631675585684433`*^9}, {
+  3.6631701408970337`*^9, 3.663170143469287*^9}, {3.663179332038527*^9, 
+  3.663179376703907*^9}, {3.663179685551543*^9, 3.663179686345793*^9}, {
+  3.663180379983513*^9, 3.6631804323265667`*^9}, {3.6632344384510727`*^9, 
+  3.663234441935597*^9}, {3.663235366090694*^9, 3.66323536850039*^9}, {
+  3.663235400801856*^9, 3.6632354025275097`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"monomialExpander", "[", 
+  RowBox[{"{", 
+   RowBox[{"1", ",", " ", "3", ",", " ", "2", ",", " ", "4"}], "}"}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.663167355900556*^9, 3.663167363475315*^9}, {
+  3.6631675126056833`*^9, 3.663167514116659*^9}, {3.663170146182312*^9, 
+  3.663170149484948*^9}, {3.6631702463930273`*^9, 3.663170246524737*^9}, {
+  3.663179689253531*^9, 3.663179692641243*^9}, {3.663235266852909*^9, 
+  3.663235345723065*^9}, {3.66323543391247*^9, 3.6632354417049627`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"0.3762469551726564`", " ", "\[Theta]1", " ", 
+  SuperscriptBox["\[Theta]2", "3"], " ", 
+  SuperscriptBox[
+   RowBox[{"(", 
+    SuperscriptBox["\[Theta]1", "\[Prime]",
+     MultilineFunction->None], ")"}], "2"], " ", 
+  SuperscriptBox[
+   RowBox[{"(", 
+    SuperscriptBox["\[Theta]2", "\[Prime]",
+     MultilineFunction->None], ")"}], "4"]}]], "Output",
+ CellChangeTimes->{{3.6631797140971518`*^9, 3.6631797309470167`*^9}, {
+   3.663180418819806*^9, 3.6631804347427187`*^9}, {3.6632354369773808`*^9, 
+   3.6632354464366503`*^9}, {3.663331570696657*^9, 3.663331577900918*^9}, 
+   3.663332646141429*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"monomialExpander", "[", 
+  RowBox[{"{", 
+   RowBox[{"5", ",", "8", ",", "3", ",", "2"}], "}"}], "]"}]], "Input",
+ CellChangeTimes->{3.6633322645702457`*^9}],
+
+Cell[BoxData[
+ RowBox[{"0.39172267224181456`", " ", 
+  SuperscriptBox["\[Theta]1", "5"], " ", 
+  SuperscriptBox["\[Theta]2", "8"], " ", 
+  SuperscriptBox[
+   RowBox[{"(", 
+    SuperscriptBox["\[Theta]1", "\[Prime]",
+     MultilineFunction->None], ")"}], "3"], " ", 
+  SuperscriptBox[
+   RowBox[{"(", 
+    SuperscriptBox["\[Theta]2", "\[Prime]",
+     MultilineFunction->None], ")"}], "2"]}]], "Output",
+ CellChangeTimes->{3.663332649833065*^9}]
+}, Open  ]],
+
+Cell["\<\
+This monomialExpander could be implemented more elegantly but it\
+\[CloseCurlyQuote]s a start\
+\>", "Text",
+ CellChangeTimes->{{3.6631810054563847`*^9, 3.663181024313499*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["Taking a list of lists to build a polynomial", "Subsubsection",
+ CellChangeTimes->{{3.663179776417704*^9, 3.663179783002452*^9}, {
+  3.663179838414741*^9, 3.663179842068962*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"polynoms", "[", "input_", "]"}], ":=", 
+  RowBox[{"Apply", "[", 
+   RowBox[{"Plus", ",", " ", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"monomialExpander", "[", "#", "]"}], "&"}], " ", "/@", " ", 
+     "input"}]}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"input", " ", "=", " ", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"5", ",", " ", "8", ",", " ", "3", ",", " ", "2"}], "}"}], 
+       ",", " ", 
+       RowBox[{"{", 
+        RowBox[{"1", ",", " ", "4", ",", " ", "0", ",", " ", "7"}], "}"}]}], 
+      "}"}], ",", " ", 
+     RowBox[{"{", 
+      RowBox[{"{", 
+       RowBox[{"5", ",", " ", "3", ",", " ", "2", ",", " ", "9"}], "}"}], 
+      "}"}]}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"polynomialiser", "[", "input_", "]"}], ":=", "  ", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"polynoms", "[", "#", "]"}], "&"}], " ", "/@", 
+   "input"}]}]}], "Input",
+ CellChangeTimes->{{3.663170363621992*^9, 3.663170410369946*^9}, {
+  3.663170490739872*^9, 3.6631705009639*^9}, {3.6631705527670193`*^9, 
+  3.663170573460435*^9}, {3.663170874652381*^9, 3.663170942160605*^9}, {
+  3.663170989696566*^9, 3.663170995932966*^9}, {3.6631796963271*^9, 
+  3.663179700053178*^9}, {3.663179736808269*^9, 3.66317973788826*^9}, {
+  3.663181088568531*^9, 3.6631811507157288`*^9}, {3.663234328321104*^9, 
+  3.66323439412868*^9}, {3.6632357943482857`*^9, 3.6632359261151323`*^9}, {
+  3.663236027796068*^9, 3.663236084310102*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"polynomialiser", "[", "input", "]"}], 
+  "\[IndentingNewLine]"}]], "Input",
+ CellChangeTimes->{{3.6632359449213057`*^9, 3.663235968563634*^9}, {
+  3.663236067783881*^9, 3.663236078174819*^9}, {3.6632361140458117`*^9, 
+  3.663236114501968*^9}, {3.663331480187818*^9, 3.663331480962104*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"0.24825661964764145`", " ", 
+     SuperscriptBox["\[Theta]1", "5"], " ", 
+     SuperscriptBox["\[Theta]2", "8"], " ", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       SuperscriptBox["\[Theta]1", "\[Prime]",
+        MultilineFunction->None], ")"}], "3"], " ", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       SuperscriptBox["\[Theta]2", "\[Prime]",
+        MultilineFunction->None], ")"}], "2"]}], "+", 
+    RowBox[{"0.0432262662290388`", " ", "\[Theta]1", " ", 
+     SuperscriptBox["\[Theta]2", "4"], " ", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       SuperscriptBox["\[Theta]2", "\[Prime]",
+        MultilineFunction->None], ")"}], "7"]}]}], ",", 
+   RowBox[{"0.0025614511644176385`", " ", 
+    SuperscriptBox["\[Theta]1", "5"], " ", 
+    SuperscriptBox["\[Theta]2", "3"], " ", 
+    SuperscriptBox[
+     RowBox[{"(", 
+      SuperscriptBox["\[Theta]1", "\[Prime]",
+       MultilineFunction->None], ")"}], "2"], " ", 
+    SuperscriptBox[
+     RowBox[{"(", 
+      SuperscriptBox["\[Theta]2", "\[Prime]",
+       MultilineFunction->None], ")"}], "9"]}]}], "}"}]], "Output",
+ CellChangeTimes->{
+  3.663235969010738*^9, {3.663236079081976*^9, 3.663236089203608*^9}, {
+   3.663331529950807*^9, 3.663331551140246*^9}, 3.663332285390473*^9, 
+   3.6633326590161963`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"gainput", " ", "=", " ", 
+  RowBox[{"Flatten", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"RandomInteger", "[", 
+        RowBox[{"10", ",", " ", 
+         RowBox[{"{", 
+          RowBox[{"3", ",", "4"}], "}"}]}], "]"}], "}"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"RandomInteger", "[", 
+        RowBox[{"10", ",", " ", 
+         RowBox[{"{", 
+          RowBox[{"3", ",", "4"}], "}"}]}], "]"}], "}"}], ",", " ", 
+      RowBox[{"{", 
+       RowBox[{"RandomInteger", "[", 
+        RowBox[{"10", ",", " ", 
+         RowBox[{"{", 
+          RowBox[{"3", ",", "4"}], "}"}]}], "]"}], "}"}]}], "}"}], ",", " ", 
+    "1"}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{"polynomialiser", "[", "gainput", "]"}]}], "Input",
+ CellChangeTimes->{{3.6631808379544497`*^9, 3.663180925218789*^9}, {
+   3.663236093730899*^9, 3.663236119404114*^9}, {3.6632361555284147`*^9, 
+   3.663236183096869*^9}, {3.6633310782731867`*^9, 3.663331123866685*^9}, {
+   3.66333118481693*^9, 3.663331276585293*^9}, {3.663331328812427*^9, 
+   3.663331383339188*^9}, 3.663331438393299*^9, 3.663331504084977*^9, {
+   3.663332298106769*^9, 3.663332303880622*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"7", ",", "8", ",", "1", ",", "7"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3", ",", "5", ",", "7", ",", "10"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5", ",", "2", ",", "10", ",", "5"}], "}"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"6", ",", "9", ",", "3", ",", "5"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4", ",", "9", ",", "10", ",", "2"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"10", ",", "2", ",", "4", ",", "9"}], "}"}]}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"2", ",", "6", ",", "10", ",", "7"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4", ",", "2", ",", "8", ",", "5"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5", ",", "10", ",", "10", ",", "1"}], "}"}]}], "}"}]}], 
+  "}"}]], "Output",
+ CellChangeTimes->{{3.663236180295498*^9, 3.663236183454625*^9}, 
+   3.66333150535452*^9, {3.663332288473267*^9, 3.663332305065957*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"0.7605850738984861`", " ", 
+     SuperscriptBox["\[Theta]1", "5"], " ", 
+     SuperscriptBox["\[Theta]2", "2"], " ", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       SuperscriptBox["\[Theta]1", "\[Prime]",
+        MultilineFunction->None], ")"}], "10"], " ", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       SuperscriptBox["\[Theta]2", "\[Prime]",
+        MultilineFunction->None], ")"}], "5"]}], "+", 
+    RowBox[{"0.09758054676426697`", " ", 
+     SuperscriptBox["\[Theta]1", "7"], " ", 
+     SuperscriptBox["\[Theta]2", "8"], " ", 
+     SuperscriptBox["\[Theta]1", "\[Prime]",
+      MultilineFunction->None], " ", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       SuperscriptBox["\[Theta]2", "\[Prime]",
+        MultilineFunction->None], ")"}], "7"]}], "+", 
+    RowBox[{"0.8509286468144628`", " ", 
+     SuperscriptBox["\[Theta]1", "3"], " ", 
+     SuperscriptBox["\[Theta]2", "5"], " ", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       SuperscriptBox["\[Theta]1", "\[Prime]",
+        MultilineFunction->None], ")"}], "7"], " ", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       SuperscriptBox["\[Theta]2", "\[Prime]",
+        MultilineFunction->None], ")"}], "10"]}]}], ",", 
+   RowBox[{
+    RowBox[{"0.5692051199920134`", " ", 
+     SuperscriptBox["\[Theta]1", "4"], " ", 
+     SuperscriptBox["\[Theta]2", "9"], " ", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       SuperscriptBox["\[Theta]1", "\[Prime]",
+        MultilineFunction->None], ")"}], "10"], " ", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       SuperscriptBox["\[Theta]2", "\[Prime]",
+        MultilineFunction->None], ")"}], "2"]}], "+", 
+    RowBox[{"0.7079015175596637`", " ", 
+     SuperscriptBox["\[Theta]1", "6"], " ", 
+     SuperscriptBox["\[Theta]2", "9"], " ", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       SuperscriptBox["\[Theta]1", "\[Prime]",
+        MultilineFunction->None], ")"}], "3"], " ", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       SuperscriptBox["\[Theta]2", "\[Prime]",
+        MultilineFunction->None], ")"}], "5"]}], "+", 
+    RowBox[{"0.536791702991215`", " ", 
+     SuperscriptBox["\[Theta]1", "10"], " ", 
+     SuperscriptBox["\[Theta]2", "2"], " ", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       SuperscriptBox["\[Theta]1", "\[Prime]",
+        MultilineFunction->None], ")"}], "4"], " ", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       SuperscriptBox["\[Theta]2", "\[Prime]",
+        MultilineFunction->None], ")"}], "9"]}]}], ",", 
+   RowBox[{
+    RowBox[{"0.5211095606560232`", " ", 
+     SuperscriptBox["\[Theta]1", "5"], " ", 
+     SuperscriptBox["\[Theta]2", "10"], " ", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       SuperscriptBox["\[Theta]1", "\[Prime]",
+        MultilineFunction->None], ")"}], "10"], " ", 
+     SuperscriptBox["\[Theta]2", "\[Prime]",
+      MultilineFunction->None]}], "+", 
+    RowBox[{"0.10171000371430705`", " ", 
+     SuperscriptBox["\[Theta]1", "4"], " ", 
+     SuperscriptBox["\[Theta]2", "2"], " ", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       SuperscriptBox["\[Theta]1", "\[Prime]",
+        MultilineFunction->None], ")"}], "8"], " ", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       SuperscriptBox["\[Theta]2", "\[Prime]",
+        MultilineFunction->None], ")"}], "5"]}], "+", 
+    RowBox[{"0.8112497936719603`", " ", 
+     SuperscriptBox["\[Theta]1", "2"], " ", 
+     SuperscriptBox["\[Theta]2", "6"], " ", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       SuperscriptBox["\[Theta]1", "\[Prime]",
+        MultilineFunction->None], ")"}], "10"], " ", 
+     SuperscriptBox[
+      RowBox[{"(", 
+       SuperscriptBox["\[Theta]2", "\[Prime]",
+        MultilineFunction->None], ")"}], "7"]}]}]}], "}"}]], "Output",
+ CellChangeTimes->{{3.663236180295498*^9, 3.663236183454625*^9}, 
+   3.66333150535452*^9, {3.663332288473267*^9, 3.663332305075762*^9}}]
+}, Open  ]],
+
+Cell["\<\
+Current drawback of the polynomialiser; will only take lists of lists of 4 \
+elements. Need to generalise. Need to generalise the polynomial expander, \
+specifically. Need to also relate the \[Omega]\[CloseCurlyQuote]s to the \
+\[Theta]\[CloseCurlyQuote]s.
+\
+\>", "Text",
+ CellChangeTimes->{{3.663171007665012*^9, 3.663171088974018*^9}, 
+   3.663171722059429*^9, {3.663179436493191*^9, 3.663179438270978*^9}, 
+   3.66317978712642*^9, {3.663236232304381*^9, 3.663236239021181*^9}}]
+}, Open  ]],
+
+Cell["Generalising the polynomialiser", "Subsubsection",
+ CellChangeTimes->{{3.663179805852017*^9, 3.6631798111266212`*^9}, {
+  3.6631807229939632`*^9, 3.663180724802335*^9}}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{708, 826},
+WindowMargins->{{4, Automatic}, {Automatic, 4}},
+FrontEndVersion->"10.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (July 29, \
+2015)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[422, 15, 131, 1, 62, "Subchapter"],
+Cell[556, 18, 26, 0, 148, "Input"],
+Cell[CellGroupData[{
+Cell[607, 22, 26, 0, 63, "Input"],
+Cell[636, 24, 27, 0, 63, "Output"]
+}, Open  ]],
+Cell[678, 27, 26, 0, 310, "Input"],
+Cell[707, 29, 26, 0, 28, "Input"],
+Cell[CellGroupData[{
+Cell[758, 33, 26, 0, 132, "Input"],
+Cell[787, 35, 27, 0, 94, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[851, 40, 26, 0, 201, "Input"],
+Cell[880, 42, 27, 0, 96, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[944, 47, 26, 0, 267, "Input"],
+Cell[973, 49, 27, 0, 114, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1037, 54, 26, 0, 28, "Input"],
+Cell[1066, 56, 27, 0, 28, "Output"]
+}, Open  ]]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[1142, 62, 164, 2, 46, "Subchapter"],
+Cell[1309, 66, 1358, 35, 92, "Text"],
+Cell[CellGroupData[{
+Cell[2692, 105, 277, 4, 43, "Subsection"],
+Cell[2972, 111, 919, 21, 48, "Input"],
+Cell[CellGroupData[{
+Cell[3916, 136, 513, 9, 28, "Input"],
+Cell[4432, 147, 624, 14, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[5093, 166, 180, 4, 28, "Input"],
+Cell[5276, 172, 443, 12, 32, "Output"]
+}, Open  ]],
+Cell[5734, 187, 185, 4, 30, "Text"],
+Cell[CellGroupData[{
+Cell[5944, 195, 184, 2, 35, "Subsubsection"],
+Cell[6131, 199, 1531, 38, 63, "Input"],
+Cell[CellGroupData[{
+Cell[7687, 241, 324, 6, 46, "Input"],
+Cell[8014, 249, 1328, 35, 57, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[9379, 289, 1190, 28, 80, "Input"],
+Cell[10572, 319, 1064, 29, 63, "Output"],
+Cell[11639, 350, 3859, 102, 115, "Output"]
+}, Open  ]],
+Cell[15513, 455, 490, 9, 87, "Text"]
+}, Open  ]],
+Cell[16018, 467, 175, 2, 35, "Subsubsection"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

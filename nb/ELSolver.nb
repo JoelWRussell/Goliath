@@ -1,0 +1,355 @@
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[         0,          0]
+NotebookDataLength[     10472,        354]
+NotebookOptionsPosition[      7921,        268]
+NotebookOutlinePosition[      8275,        284]
+CellTagsIndexPosition[      8232,        281]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Euler-Lagrange solver", "Title",
+ CellChangeTimes->{{3.6357021613099813`*^9, 3.635702165426605*^9}}],
+
+Cell["\<\
+This notebook contains the code for the polynomial Lagrangian search \
+algorithm.\
+\>", "Text",
+ CellChangeTimes->{{3.636205913611555*^9, 3.6362059756437607`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["Preparing the score function", "Subsection",
+ CellChangeTimes->{{3.636205966137278*^9, 3.636205971582734*^9}}],
+
+Cell[TextData[{
+ "The following functions prepare the score function for a given model and \
+dataset. A nice feature of the polynomial model is that all of the \
+derivatives of the model can be evaluated in advance, so the score can be \
+pre-computed, resulting in a score function that only depends on the model \
+parameters, independent of the number of data points. These functions do that \
+pre-computation, and result in something that can be fed to the numerical \
+optimiser.\n\nIf you\[CloseCurlyQuote]re not familiar with ",
+ StyleBox["Mathematica",
+  FontSlant->"Italic"],
+ " meta-programming, then this section might be quite hard to follow.\n\n\
+First, a couple of helper functions for symbol mangling."
+}], "Text",
+ CellChangeTimes->{{3.6362059790524*^9, 3.636206123393255*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"symbolAppend", "[", 
+   RowBox[{"symbol_", ",", "postfix_"}], "]"}], ":=", 
+  RowBox[{"Symbol", "[", 
+   RowBox[{
+    RowBox[{"SymbolName", "[", "symbol", "]"}], "<>", "postfix"}], 
+   "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"dotVar", "[", "v_", "]"}], ":=", 
+  RowBox[{"symbolAppend", "[", 
+   RowBox[{"v", ",", "\"\<dot\>\""}], "]"}]}]}], "Input",
+ CellChangeTimes->{{3.636186943129759*^9, 3.636186952742033*^9}, {
+  3.636187500524008*^9, 3.636187541163336*^9}}],
+
+Cell[TextData[{
+ "The Euler-Lagrange equation is a little tricky, in that it treats velocity \
+variables as independent of position variable when differentiating the \
+Lagrangian, but then treats velocities as the derivative of the positions \
+when doing the time derivative. We handle this in a simple way by explicitly \
+transforming the symbols in the equations: one transformation makes \
+time-independent symbols time-dependent, and the second relates velocities \
+and coordinates.\n\nHere, and in all functions below, ",
+ Cell[BoxData[
+  FormBox["vars", TraditionalForm]]],
+ " is a list of the position variables, corresponding to the variables in the \
+dataset (see below)."
+}], "Text",
+ CellChangeTimes->{{3.636206131560281*^9, 3.636206336787539*^9}, {
+  3.6362065789596024`*^9, 3.636206592077092*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"generateTransformations", "[", "vars_", "]"}], ":=", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"dotVars", ",", "toTimeDependent", ",", "toDerivatives"}], "}"}],
+     ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"dotVars", "=", 
+      RowBox[{"dotVar", "/@", "vars"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"toTimeDependent", "=", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"#", "\[Rule]", 
+         RowBox[{"#", "[", "t", "]"}]}], "&"}], "/@", 
+       RowBox[{"Join", "[", 
+        RowBox[{"vars", ",", "dotVars"}], "]"}]}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"toDerivatives", "=", 
+      RowBox[{
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{"dotVar", "[", "#", "]"}], "[", "t", "]"}], "\[Rule]", 
+         RowBox[{
+          RowBox[{"#", "'"}], "[", "t", "]"}]}], "&"}], "/@", "vars"}]}], ";",
+      "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{"toTimeDependent", ",", "toDerivatives"}], "}"}]}]}], 
+   "\[IndentingNewLine]", "]"}]}]], "Input",
+ CellChangeTimes->{{3.636186187750161*^9, 3.636186195842209*^9}, {
+  3.636186266864026*^9, 3.636186325267001*^9}, {3.6361866893189487`*^9, 
+  3.6361869022936172`*^9}, {3.636186936935605*^9, 3.6361869400631037`*^9}, {
+  3.636201806476975*^9, 3.636201813586475*^9}, {3.6362065849158287`*^9, 
+  3.636206585815181*^9}}],
+
+Cell["\<\
+This generates the EL part of the score, which is zero if the Euler-Lagrange \
+equation is satifsfied. It returns a function of the Lagrangian, which itself \
+returns the value for the score symbolically.\
+\>", "Text",
+ CellChangeTimes->{{3.636206291088027*^9, 3.636206294295072*^9}, {
+  3.636206340555401*^9, 3.636206394377193*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"generateELScore", "[", "vars_", "]"}], ":=", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"toTimeDependent", ",", "toDerivatives"}], "}"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"toTimeDependent", ",", "toDerivatives"}], "}"}], "=", 
+      RowBox[{"generateTransformations", "[", "vars", "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Function", "[", 
+      RowBox[{"l", ",", "\[IndentingNewLine]", 
+       RowBox[{"Plus", "@@", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{
+           SuperscriptBox[
+            RowBox[{"(", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"D", "[", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"D", "[", 
+                   RowBox[{
+                    RowBox[{"l", "/.", "toTimeDependent"}], ",", 
+                    RowBox[{
+                    RowBox[{"dotVar", "[", "#", "]"}], "[", "t", "]"}]}], 
+                   "]"}], "/.", "toDerivatives"}], ",", "t"}], "]"}], "-", 
+               RowBox[{"D", "[", 
+                RowBox[{
+                 RowBox[{"l", "/.", "toTimeDependent"}], ",", 
+                 RowBox[{"#", "[", "t", "]"}]}], "]"}]}], "/.", 
+              "toDerivatives"}], ")"}], "2"], "&"}], "/@", "vars"}], 
+         ")"}]}]}], "\[IndentingNewLine]", "]"}]}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.636185553449294*^9, 3.63618562078446*^9}, {
+  3.6361858354710207`*^9, 3.636185836064197*^9}, {3.6361862033562727`*^9, 
+  3.636186255421191*^9}, {3.636186306923086*^9, 3.6361863473478603`*^9}, {
+  3.636186994888825*^9, 3.636187059785425*^9}, {3.636201816493685*^9, 
+  3.6362018186610203`*^9}}],
+
+Cell[RawData[""], "Text"],
+
+Cell[RawData[""], "Input"],
+
+Cell[RawData[""], "Text"],
+
+Cell[RawData[""], "Input"],
+
+Cell[RawData[""], "Text"],
+
+Cell[RawData[""], "Input"],
+
+Cell[RawData[""], "Text"],
+
+Cell[RawData[""], "Input"],
+
+Cell[RawData[""], "Text"],
+
+Cell[RawData[""], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[RawData[""], "Subsection"],
+
+Cell[RawData[""], "Text"],
+
+Cell[RawData[""], "Input"],
+
+Cell[RawData[""], "Text"],
+
+Cell[RawData[""], "Input"],
+
+Cell[RawData[""], "Text"],
+
+Cell[RawData[""], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[RawData[""], "Subsection"],
+
+Cell[RawData[""], "Text"],
+
+Cell[RawData[""], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[RawData[""], "Subsection"],
+
+Cell[RawData[""], "Text"],
+
+Cell[RawData[""], "Input"],
+
+Cell[RawData[""], "Text"],
+
+Cell[RawData[""], "Input"],
+
+Cell[RawData[""], "Text"],
+
+Cell[RawData[""], "Input"],
+
+Cell[RawData[""], "Input"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[RawData[""], "Subsection"],
+
+Cell[RawData[""], "Text"],
+
+Cell[RawData[""], "Input"],
+
+Cell[RawData[""], "Text"],
+
+Cell[RawData[""], "Input"],
+
+Cell[RawData[""], "Text"],
+
+Cell[RawData[""], "Input"],
+
+Cell[RawData[""], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[RawData[""], "Input"],
+
+Cell[RawData[""], "Output"]
+}, Open  ]],
+
+Cell[RawData[""], "Text"],
+
+Cell[RawData[""], "Input"],
+
+Cell[RawData[""], "Text"],
+
+Cell[RawData[""], "Input"],
+
+Cell[RawData[""], "Input"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{829, 773},
+WindowMargins->{{Automatic, -85}, {Automatic, 0}},
+FrontEndVersion->"10.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (July 29, \
+2015)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[422, 15, 106, 1, 92, "Title"],
+Cell[531, 18, 173, 4, 30, "Text"],
+Cell[CellGroupData[{
+Cell[729, 26, 116, 1, 44, "Subsection"],
+Cell[848, 29, 790, 13, 163, "Text"],
+Cell[1641, 44, 513, 13, 46, "Input"],
+Cell[2157, 59, 810, 14, 164, "Text"],
+Cell[2970, 75, 1397, 35, 114, "Input"],
+Cell[4370, 112, 343, 6, 49, "Text"],
+Cell[4716, 120, 1756, 43, 153, "Input"],
+Cell[6475, 165, 25, 0, 30, "Text"],
+Cell[6503, 167, 26, 0, 154, "Input"],
+Cell[6532, 169, 25, 0, 30, "Text"],
+Cell[6560, 171, 26, 0, 36, "Input"],
+Cell[6589, 173, 25, 0, 109, "Text"],
+Cell[6617, 175, 26, 0, 80, "Input"],
+Cell[6646, 177, 25, 0, 145, "Text"],
+Cell[6674, 179, 26, 0, 80, "Input"],
+Cell[6703, 181, 25, 0, 52, "Text"],
+Cell[6731, 183, 26, 0, 119, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[6794, 188, 31, 0, 44, "Subsection"],
+Cell[6828, 190, 25, 0, 49, "Text"],
+Cell[6856, 192, 26, 0, 28, "Input"],
+Cell[6885, 194, 25, 0, 185, "Text"],
+Cell[6913, 196, 26, 0, 355, "Input"],
+Cell[6942, 198, 25, 0, 49, "Text"],
+Cell[6970, 200, 26, 0, 97, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7033, 205, 31, 0, 44, "Subsection"],
+Cell[7067, 207, 25, 0, 91, "Text"],
+Cell[7095, 209, 26, 0, 212, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7158, 214, 31, 0, 44, "Subsection"],
+Cell[7192, 216, 25, 0, 49, "Text"],
+Cell[7220, 218, 26, 0, 97, "Input"],
+Cell[7249, 220, 25, 0, 49, "Text"],
+Cell[7277, 222, 26, 0, 131, "Input"],
+Cell[7306, 224, 25, 0, 51, "Text"],
+Cell[7334, 226, 26, 0, 51, "Input"],
+Cell[7363, 228, 26, 0, 46, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7426, 233, 31, 0, 44, "Subsection"],
+Cell[7460, 235, 25, 0, 30, "Text"],
+Cell[7488, 237, 26, 0, 28, "Input"],
+Cell[7517, 239, 25, 0, 87, "Text"],
+Cell[7545, 241, 26, 0, 165, "Input"],
+Cell[7574, 243, 25, 0, 70, "Text"],
+Cell[7602, 245, 26, 0, 80, "Input"],
+Cell[7631, 247, 26, 0, 114, "Input"],
+Cell[CellGroupData[{
+Cell[7682, 251, 26, 0, 28, "Input"],
+Cell[7711, 253, 27, 0, 63, "Output"]
+}, Open  ]],
+Cell[7753, 256, 25, 0, 68, "Text"],
+Cell[7781, 258, 26, 0, 216, "Input"],
+Cell[7810, 260, 25, 0, 68, "Text"],
+Cell[7838, 262, 26, 0, 28, "Input"],
+Cell[7867, 264, 26, 0, 80, "Input"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
