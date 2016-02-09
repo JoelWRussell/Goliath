@@ -2,12 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6e0fdf9f-6d49-405b-af43-26ac56c2194a" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gorilla-port" afterPath="$PROJECT_DIR$/.gorilla-port" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.nrepl-port" afterPath="$PROJECT_DIR$/.nrepl-port" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ws/Joel-Sandpit.clj" afterPath="$PROJECT_DIR$/ws/Joel-Sandpit.clj" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ws/gorilla_run.clj" afterPath="$PROJECT_DIR$/ws/gorilla_run.clj" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/META-INF/maven/Goliath/Goliath/pom.properties" afterPath="$PROJECT_DIR$/target/classes/META-INF/maven/Goliath/Goliath/pom.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/replstate.xml" afterPath="$PROJECT_DIR$/.idea/replstate.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/regression_test_score.clj" afterPath="$PROJECT_DIR$/src/regression_test_score.clj" />
     </list>
     <ignored path="Goliath.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -38,11 +35,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="config.clj" pinned="false" current-in-tab="true">
+      <file leaf-file-name="config.clj" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/runs/config.clj">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.33131617">
+            <state vertical-scroll-proportion="-8.111111">
               <caret line="19" column="37" selection-start-line="19" selection-start-column="37" selection-end-line="19" selection-end-column="37" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="gorilla_run.clj" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/ws/gorilla_run.clj">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.40998486">
+              <caret line="381" column="5" selection-start-line="381" selection-start-column="5" selection-end-line="381" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -65,6 +72,7 @@
         <option value="$PROJECT_DIR$/ws/regression_test_score.clj" />
         <option value="$PROJECT_DIR$/../joel_flow_2016/flow/src/runs/config.clj" />
         <option value="$PROJECT_DIR$/src/runs/config.clj" />
+        <option value="$PROJECT_DIR$/ws/gorilla_run.clj" />
       </list>
     </option>
   </component>
@@ -107,7 +115,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -176,6 +183,7 @@
       </pane>
       <pane id="PackagesPane" />
       <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -401,8 +409,8 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -432,15 +440,16 @@
     <entry file="file://$PROJECT_DIR$/src/runs/config.clj">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="35" column="33" selection-start-line="35" selection-start-column="33" selection-end-line="35" selection-end-column="33" />
+          <caret line="19" column="37" selection-start-line="19" selection-start-column="37" selection-end-line="19" selection-end-column="37" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../joel_flow_2016/flow/src/runs/config.clj">
+    <entry file="file://$PROJECT_DIR$/project.clj">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3488372">
-          <caret line="16" column="20" selection-start-line="0" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -454,8 +463,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/runs/config.clj">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33131617">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="35" column="33" selection-start-line="35" selection-start-column="33" selection-end-line="35" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/project.clj">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/runs/config.clj">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-8.111111">
           <caret line="19" column="37" selection-start-line="19" selection-start-column="37" selection-end-line="19" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ws/gorilla_run.clj">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.40998486">
+          <caret line="381" column="5" selection-start-line="381" selection-start-column="5" selection-end-line="381" selection-end-column="5" />
           <folding />
         </state>
       </provider>
