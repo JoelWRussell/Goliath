@@ -19,10 +19,10 @@
 ;; **
 
 ;; @@
-(import 'lagrangianscore.LagrangianScore)
+(import 'goliath.mathlink.LagrangianScore)
 ;; @@
 ;; =>
-;;; {"type":"html","content":"<span class='clj-class'>lagrangianscore.LagrangianScore</span>","value":"lagrangianscore.LagrangianScore"}
+;;; {"type":"html","content":"<span class='clj-class'>goliath.mathlink.LagrangianScore</span>","value":"goliath.mathlink.LagrangianScore"}
 ;; <=
 
 ;; **
