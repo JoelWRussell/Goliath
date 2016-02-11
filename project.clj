@@ -12,8 +12,10 @@
                            [darwin "1.0.0"]
                            [semantic-csv "0.1.0-alpha1"]
                            [criterium "0.4.3"]
-                           [incanter-gorilla "0.1.0"]]
-            :plugins [[lein-gorilla "0.3.5"]]
+                           [incanter-gorilla "0.1.0"]
+                           [jlink "1.0.0"]]
+            :plugins [[lein-gorilla "0.3.5"]
+                      [lein-localrepo "0.5.3"]]
             :jvm-opts ^:replace ["-server"
                                  ;;"-XX:+AggressiveOpts"
                                  ;;"-XX:+UseFastAccessorMethods"
