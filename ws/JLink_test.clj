@@ -88,7 +88,7 @@
 (into [] (goliath.mathlink.LagrangianScore/GetScore (into-array Integer/TYPE [1, 1, 1, 1])))
 ;; @@
 ;; =>
-;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>18.853345328976403</span>","value":"18.853345328976403"},{"type":"html","content":"<span class='clj-double'>-0.9999999995150077</span>","value":"-0.9999999995150077"}],"value":"[18.853345328976403 -0.9999999995150077]"}
+;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>14.072445026423615</span>","value":"14.072445026423615"},{"type":"html","content":"<span class='clj-double'>8.129417044365288</span>","value":"8.129417044365288"}],"value":"[14.072445026423615 8.129417044365288]"}
 ;; <=
 
 ;; **
@@ -97,24 +97,28 @@
 
 ;; @@
 (defn test-score
-  []
-  (into [] (goliath.mathlink.LagrangianScore/GetScore (into-array Integer/TYPE [1, 1, 1, 1]))))
+  [ind]
+  (into [] (goliath.mathlink.LagrangianScore/GetScore (into-array Integer/TYPE (flatten ind)))))
 ;; @@
 ;; =>
 ;;; {"type":"html","content":"<span class='clj-var'>#&#x27;warm-swamp/test-score</span>","value":"#'warm-swamp/test-score"}
 ;; <=
 
 ;; @@
-(criterium/quick-bench (test-score))
+(criterium/quick-bench (test-score [1, 1, 1, 1]))
 ;; @@
 ;; ->
-;;; WARNING: Final GC required 21.2526281226028 % of runtime
-;;; Evaluation count : 36 in 6 samples of 6 calls.
-;;;              Execution time mean : 24.776276 ms
-;;;     Execution time std-deviation : 5.432053 ms
-;;;    Execution time lower quantile : 19.958330 ms ( 2.5%)
-;;;    Execution time upper quantile : 31.245726 ms (97.5%)
-;;;                    Overhead used : 1.882679 ns
+;;; WARNING: Final GC required 25.212467600250587 % of runtime
+;;; Evaluation count : 72 in 6 samples of 12 calls.
+;;;              Execution time mean : 9.410892 ms
+;;;     Execution time std-deviation : 387.466274 µs
+;;;    Execution time lower quantile : 9.020552 ms ( 2.5%)
+;;;    Execution time upper quantile : 9.965570 ms (97.5%)
+;;;                    Overhead used : 1.864040 ns
+;;; 
+;;; Found 1 outliers in 6 samples (16.6667 %)
+;;; 	low-severe	 1 (16.6667 %)
+;;;  Variance from outliers : 13.8889 % Variance is moderately inflated by outliers
 ;;; 
 ;; <-
 ;; =>

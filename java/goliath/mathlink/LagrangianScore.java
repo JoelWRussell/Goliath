@@ -153,28 +153,44 @@ public class LagrangianScore {
                 "Expand[pathSum[vars, generateNScore[vars][l]," +
                 "controlTrj]]] targetUnity[" +
                 "Expand[pathSum[vars, generateELScore[vars][l], controlTrj]]]]");
-        exeCmd("nmSolve[scoreExpression_, coeffs_, model_] := Module[{sol}," +
-                "err = {}; step = 0; eval = 0; dimensions = Length[coeffs];" +
-                "bestModel = 0;" +
-                "sol = NMinimize[" +
-                "Join[{scoreExpression}, Thread[-1.0 < # < 1.0 & /@ coeffs]]," +
-                "coeffs," +
-                "AccuracyGoal -> 10," +
-                "PrecisionGoal -> 10," +
-                "Method -> {" +
-                "\"NelderMead\"," +
-                "\"PostProcess\" -> False," +
-                "\"ExpandRatio\" -> 1 + (2/Length[coeffs])," +
-                "\"ContractRatio\" -> (3/4) - (1/(2 Length[coeffs]))," +
-                "\"ShrinkRatio\" -> 1 - (1/Length[coeffs])}," +
-                "MaxIterations -> 50 10^5," +
-                "StepMonitor :> (step++; " +
-                "If[Mod[step, 500] == 0, err = Append[err, scoreExpression];" +
-                "bestModel = model])," +
-                "EvaluationMonitor :> (eval++)];" +
-                "{\"steps\" -> step, \"bestScore\" -> sol[[1]], \"solution\" -> sol[[2]]," +
-                "\"model\" -> model /. sol[[2]]}" +
-                "]");
+//        exeCmd("nmSolve[scoreExpression_, coeffs_, model_] := Module[{sol}," +
+//                "err = {}; step = 0; eval = 0; dimensions = Length[coeffs];" +
+//                "bestModel = 0;" +
+//                "sol = NMinimize[" +
+//                "Join[{scoreExpression}, Thread[-1.0 < # < 1.0 & /@ coeffs]]," +
+//                "coeffs," +
+//                "AccuracyGoal -> 10," +
+//                "PrecisionGoal -> 10," +
+//                "Method -> {" +
+//                "\"NelderMead\"," +
+//                "\"PostProcess\" -> False," +
+//                "\"ExpandRatio\" -> 1 + (2/Length[coeffs])," +
+//                "\"ContractRatio\" -> (3/4) - (1/(2 Length[coeffs]))," +
+//                "\"ShrinkRatio\" -> 1 - (1/Length[coeffs])}," +
+//                "MaxIterations -> 50 10^5," +
+//                "StepMonitor :> (step++; " +
+//                "If[Mod[step, 500] == 0, err = Append[err, scoreExpression];" +
+//                "bestModel = model])," +
+//                "EvaluationMonitor :> (eval++)];" +
+//                "{\"steps\" -> step, \"bestScore\" -> sol[[1]], \"solution\" -> sol[[2]]," +
+//                "\"model\" -> model /. sol[[2]]}" +
+//                "]");
+        exeCmd("nmSolve[scoreExpression_, coeffs_, model_] := Module[{sol},\n" +
+                "  err = {}; step = 0; eval = 0; dimensions = Length[coeffs]; \n" +
+                "  bestModel = 0;\n" +
+                "  sol = FindMinimum[scoreExpression,\n" +
+                "    coeffs,\n" +
+                "    Method -> \"QuasiNewton\",\n" +
+                "    AccuracyGoal -> 10,\n" +
+                "    PrecisionGoal -> 10,\n" +
+                "    MaxIterations -> 50 10^5,\n" +
+                "    StepMonitor :> (step++; \n" +
+                "      If[Mod[step, 500] == 0, err = Append[err, scoreExpression]; \n" +
+                "       bestModel = model]),\n" +
+                "    EvaluationMonitor :> (eval++)];\n" +
+                "  {\"steps\" -> step, \"bestScore\" -> sol[[1]], \"solution\" -> sol[[2]], \n" +
+                "   \"model\" -> model /. sol[[2]]}\n" +
+                "  ]");
         exeCmd("ScoreAndGetCoefficients[polyData_, expData_, controlData_] := " +
                 "Module[{vars, myPolynomial, scoreFn, result}," +
                 "vars = {th1, th2};" +
