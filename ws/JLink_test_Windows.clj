@@ -76,7 +76,7 @@
 
 ;; @@
 (goliath.mathlink.LagrangianScore/InitFunctions
-  "/Applications/Mathematica.app/Contents/MacOS/MathKernel"
+  "c:/program files/wolfram research/mathematica/10.0/mathkernel.exe"
   "resources/"
   "mma_double.csv")
 ;; @@
@@ -88,7 +88,7 @@
 (into [] (goliath.mathlink.LagrangianScore/GetScore (into-array Integer/TYPE [1, 1, 1, 1])))
 ;; @@
 ;; =>
-;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>14.072445026423615</span>","value":"14.072445026423615"},{"type":"html","content":"<span class='clj-double'>8.129417044365288</span>","value":"8.129417044365288"}],"value":"[14.072445026423615 8.129417044365288]"}
+;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>14.072445026423615</span>","value":"14.072445026423615"},{"type":"html","content":"<span class='clj-double'>8.129417044365267</span>","value":"8.129417044365267"}],"value":"[14.072445026423615 8.129417044365267]"}
 ;; <=
 
 ;; **
@@ -108,13 +108,14 @@
 (criterium/quick-bench (test-score [1, 1, 1, 1]))
 ;; @@
 ;; ->
-;;; WARNING: Final GC required 25.212467600250587 % of runtime
-;;; Evaluation count : 72 in 6 samples of 12 calls.
-;;;              Execution time mean : 9.410892 ms
-;;;     Execution time std-deviation : 387.466274 µs
-;;;    Execution time lower quantile : 9.020552 ms ( 2.5%)
-;;;    Execution time upper quantile : 9.965570 ms (97.5%)
-;;;                    Overhead used : 1.864040 ns
+;;; WARNING: Final GC required 3.462162560564387 % of runtime
+;;; WARNING: Final GC required 28.43879097609376 % of runtime
+;;; Evaluation count : 42 in 6 samples of 7 calls.
+;;;              Execution time mean : 16.109125 ms
+;;;     Execution time std-deviation : 720.667129 µs
+;;;    Execution time lower quantile : 15.594178 ms ( 2.5%)
+;;;    Execution time upper quantile : 17.336672 ms (97.5%)
+;;;                    Overhead used : 2.718398 ns
 ;;; 
 ;;; Found 1 outliers in 6 samples (16.6667 %)
 ;;; 	low-severe	 1 (16.6667 %)

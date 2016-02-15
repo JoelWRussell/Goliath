@@ -17,7 +17,7 @@ public class LagrangianScore {
     private static String szMath = "-linkmode launch -linkname ";
 
     ///Put commands between OpenLink and CloseLink; there is no exception
-    //handlink the exception is just bounced out of the program
+    //handling; the exception is just bounced out of the program
     //exeCmd discards the return value
     //exeCmdDouble expects to return a double
         /* examples....
@@ -81,7 +81,7 @@ public class LagrangianScore {
 
 
     // input a list of integers and it will score to the data etc
-    public static double[] GetScore(int[] poly) throws MathLinkException {
+    public static synchronized double[] GetScore(int[] poly, int df) throws MathLinkException {
         //clojure will send an array of doubles
         //package into groups of 4
         String szPoly = "{{";
@@ -92,8 +92,9 @@ public class LagrangianScore {
             szPoly += poly[f] + (((f - 3) % 4 == 0) ? "" : ",");
         }
         szPoly += "}}";
-        //System.out.println(szPoly);
-        return (exeCmdDoubleArray("ScoreAndGetCoefficients[" + szPoly + ", data[[1]], data[[2]]]"));
+        System.out.println("Poly received: " + szPoly);
+        
+        return (exeCmdDoubleArray("ScoreAndGetCoefficients[" + szPoly + ", data[[1]], data[[2]],"+df+"]"));
 
     }
 
@@ -104,10 +105,10 @@ public class LagrangianScore {
         for (double i : a) System.out.println(i);
     }
 
-    public static void InitFunctions(String mathPath, String packagePath, String dataName) throws MathLinkException {
+    public static void InitFunctions(String mathPath, String packagePath, String dataName, double deltat, int df) throws MathLinkException {
         OpenLink(mathPath);
         exeCmd("Get[\"" + packagePath + "LagrangeSolver.m\"]");
-        exeCmd("data = PrepareData[\"" + packagePath + "/" + dataName + "\", 0.1];");
+        exeCmd("data = PrepareData[\"" + packagePath + "/" + dataName + "\","+ deltat + "," + df +"];");
         exeCmd("symbolAppend[symbol_, postfix_] := Symbol[SymbolName[symbol] <> postfix]; "
                 + "dotVar[v_] := symbolAppend[v, \"dot\"];");
         exeCmd("generateTransformations[vars_] := Module[{dotVars, toTimeDependent, toDerivatives}," +
@@ -118,7 +119,7 @@ public class LagrangianScore {
         exeCmd("polynomialiser2[vars_, indv_] :=" +
                 "Module[{nVars, fullVarList, monoList, coeffs}," +
                 "nVars = 2*Length[vars];" +
-                "fullVarList = Flatten[{#, dotVar[#]} & /@ vars];" +
+                "fullVarList = Flatten[ {vars, dotVar[#] & /@ vars}];" +
                 "monoList = Times @@ (fullVarList^#) & /@ indv;" +
                 "coeffs = Symbol[\"c\" <> ToString[#]] & /@ Range[Length[monoList]];" +
                 "{coeffs, monoList.coeffs}" +
@@ -191,9 +192,9 @@ public class LagrangianScore {
                 "  {\"steps\" -> step, \"bestScore\" -> sol[[1]], \"solution\" -> sol[[2]], \n" +
                 "   \"model\" -> model /. sol[[2]]}\n" +
                 "  ]");
-        exeCmd("ScoreAndGetCoefficients[polyData_, expData_, controlData_] := " +
+        exeCmd("ScoreAndGetCoefficients[polyData_, expData_, controlData_, df_] := " +
                 "Module[{vars, myPolynomial, scoreFn, result}," +
-                "vars = {th1, th2};" +
+                "vars = symbolAppend[th, ToString[#]] & /@ Range[df];" +
                 "myPolynomial = polynomialiser2[vars, polyData];" +
                 "scoreFn = " +
                 "generateScore[vars, myPolynomial[[2]], expData, controlData];" +
@@ -201,6 +202,7 @@ public class LagrangianScore {
                 "Flatten[{\"bestScore\" /. result[[2]]," +
                 " myPolynomial[[1]] /. \"solution\" /. result[[3]]}]" +
                 "]");
+        
 
     }
 
@@ -210,9 +212,9 @@ public class LagrangianScore {
 
 
     public static void main(String[] args) throws MathLinkException {
-        InitFunctions(args[0], args[1], args[2]);
+        InitFunctions(args[0], args[1], args[2], Double.valueOf(args[3]), Integer.valueOf(args[4]));
         int[] a = {1, 1, 1, 1, 2, 2, 2, 2};
-        double[] res = GetScore(a);
+        double[] res = GetScore(a,2);
         for (double i : res) System.out.println(i);
         Shutdown();
     }

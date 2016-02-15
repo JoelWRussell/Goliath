@@ -4,7 +4,7 @@ BeginPackage["LagrangeSolver`"]
 
 
 
-PrepareData::usage = "PrepareData[sz, deltat]"
+PrepareData::usage = "PrepareData[sz, deltat, df]"
 
 Begin["`Private`"]
 
@@ -19,29 +19,28 @@ symbolAppend[symbol_, postfix_] :=
 dotVar[v_] := symbolAppend[v, "dot"];
 
 
-PrepareData[sz_, deltat_] := Module[
-  {experimentalData, times, expth1, expth2, expw1, expw2, expa1, expa2},
+PrepareData[sz_, deltat_, df_] := Module[
+  {experimentalData, times, vars, expTh, expW, expA, expD, 
+myExperimentalData, myControlData},
   
-  experimentalData = 
-   Transpose[ 
-    Partition[ ReadList[ sz, Number, RecordSeparators -> {","}], 2]];
+experimentalData = 
+ Transpose[ 
+  Partition[ ReadList[ sz, Number, RecordSeparators -> {","}], df]];
 times =  Range[0, (Length[experimentalData[[1]]] - 1)]*deltat;
-expth1 = Transpose[{times, experimentalData[[1]] + 1*^-15}];
-expth2 = Transpose[{times, experimentalData[[2]] + 1*^-15}];
-expw1 = (Interpolation[expth1])'[times];
-expw2 = (Interpolation[expth2])'[times];
-expa1 = (Interpolation[expth1])''[times];
-expa2 = (Interpolation[expth2])''[times];
-expth1 = experimentalData[[1]];
-expth2 = experimentalData[[2]];
-myExperimentalData = 
-  Flatten[{ {symbolAppend[th1,""] -> expth1, symbolAppend[th1, "d"] -> expw1, 
-     symbolAppend[th1, "dd"] -> expa1},
-    {symbolAppend[th2,""] -> expth2, symbolAppend[th2, "d"] -> expw2, 
-     symbolAppend[th2, "dd"] -> expa2}}];
+vars = symbolAppend[th, ToString[#]] & /@ Range[df];
+expTh = Transpose[{times, # + 1*^-20}] & /@ experimentalData;
+expW = (Interpolation[#])'[times] & /@ expTh;
+expA = (Interpolation[#])''[times] & /@ expTh;
+expD = Transpose[{ vars, 
+   experimentalData, expW, expA}];
+ myExperimentalData = 
+ Flatten[{#[[1]] -> #[[2]], symbolAppend[#[[1]], "d"] -> #[[3]], 
+     symbolAppend[#[[1]], "dd"] -> #[[4]]} & /@ expD];
 myControlData = 
-  makeControlTrajectory[{th1, th2}, times[[Length[times]]], deltat];
+ makeControlTrajectory[vars, times[[Length[times]]], deltat];
+
 {myExperimentalData, myControlData}
+
 ]
 
 
