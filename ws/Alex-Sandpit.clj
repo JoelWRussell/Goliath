@@ -152,5 +152,31 @@
 ;; <=
 
 ;; @@
+(def power_max 4)
+
+(defn gene-tweak
+  [indv]
+  (let [n (rand-int (count indv)) gene (nth indv n) new-gene (assoc gene (rand-int (count gene)) (rand-int power_max))]
+    (assoc indv n new-gene)
+    ))
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-var'>#&#x27;goliath/gene-tweak</span>","value":"#'goliath/gene-tweak"}
+;; <=
+
+;; @@
+(gene-tweak
+      [[1 3 4 1] [2 3 4 5]])
+
+;; @@
+
+;; @@
+(count [1 2 0 0])
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-unkown'>4</span>","value":"4"}
+;; <=
+
+;; @@
 
 ;; @@
