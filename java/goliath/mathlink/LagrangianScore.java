@@ -94,116 +94,21 @@ public class LagrangianScore {
         szPoly += "}}";
         System.out.println("Poly received: " + szPoly);
         
-        return (exeCmdDoubleArray("ScoreAndGetCoefficients[" + szPoly + ", data[[1]], data[[2]],"+df+"]"));
+        return (exeCmdDoubleArray("scoreAndGetCoefficients[" + szPoly + ", data[[1]], data[[2]],"+df+"]"));
 
     }
 
     private static void TestScore() throws MathLinkException {
 
         //Make sure InitFunctions has been called to load the data
-        double[] a = exeCmdDoubleArray("ScoreAndGetCoefficients[{{1, 1, 1, 1}, {2, 2, 2, 2}, {1, 2, 2, 1}, {2, 2, 2, 2}}, data[[1]], data[[2]]]");
+        double[] a = exeCmdDoubleArray("scoreAndGetCoefficients[{{1, 1, 1, 1}, {2, 2, 2, 2}, {1, 2, 2, 1}, {2, 2, 2, 2}}, data[[1]], data[[2]]]");
         for (double i : a) System.out.println(i);
     }
 
     public static void InitFunctions(String mathPath, String packagePath, String dataName, double deltat, int df) throws MathLinkException {
         OpenLink(mathPath);
         exeCmd("Get[\"" + packagePath + "LagrangeSolver.m\"]");
-        exeCmd("data = PrepareData[\"" + packagePath + "/" + dataName + "\","+ deltat + "," + df +"];");
-        exeCmd("symbolAppend[symbol_, postfix_] := Symbol[SymbolName[symbol] <> postfix]; "
-                + "dotVar[v_] := symbolAppend[v, \"dot\"];");
-        exeCmd("generateTransformations[vars_] := Module[{dotVars, toTimeDependent, toDerivatives}," +
-                "dotVars = dotVar /@ vars;" +
-                "toTimeDependent = # -> #[t] & /@ Join[vars, dotVars];" +
-                "toDerivatives = dotVar[#][t] -> #'[t] & /@ vars;" +
-                "{toTimeDependent, toDerivatives}]");
-        exeCmd("polynomialiser2[vars_, indv_] :=" +
-                "Module[{nVars, fullVarList, monoList, coeffs}," +
-                "nVars = 2*Length[vars];" +
-                "fullVarList = Flatten[ {vars, dotVar[#] & /@ vars}];" +
-                "monoList = Times @@ (fullVarList^#) & /@ indv;" +
-                "coeffs = Symbol[\"c\" <> ToString[#]] & /@ Range[Length[monoList]];" +
-                "{coeffs, monoList.coeffs}" +
-                "];");
-        exeCmd("generateELScore[vars_] := Module[{toTimeDependent, toDerivatives}," +
-                "{toTimeDependent, toDerivatives} = generateTransformations[vars];" +
-                "Function[l," +
-                " Plus @@ ((D[D[l /. toTimeDependent, dotVar[#][t]] /. toDerivatives," +
-                "t] - D[l /. toTimeDependent, #[t]] /. toDerivatives)^2 & /@" +
-                "vars)" +
-                "]]");
-        exeCmd("generateNScore[vars_] := Module[{toTimeDependent, toDerivatives}," +
-                "{toTimeDependent, toDerivatives} = generateTransformations[vars];" +
-                "Function[l," +
-                "Plus @@ ((D[D[l /. toTimeDependent, dotVar[#][t]] /. toDerivatives," +
-                "t])^2 + (D[l /. toTimeDependent, #[t]] /. " +
-                "toDerivatives)^2 & /@ vars)" +
-                "]]");
-        exeCmd("targetUnity[x_] := Log[10^-25 + x]^2 + 1");
-        exeCmd("pathSum[vars_, score_, p_] := Module[{toData}," +
-                "toData = " +
-                "Flatten[{#[t] -> #, #'[t] -> symbolAppend[#, \"d\"], #''[t] -> " +
-                "symbolAppend[#, \"dd\"]} & /@ vars];" +
-                "Plus @@ ((score /. toData) /. p)" +
-                "]");
-        exeCmd("generateScore[vars_, l_, trajectory_, controlTrj_] :=" +
-                "Log[((10^-10 +" +
-                "Expand[pathSum[vars, generateELScore[vars][l]," +
-                "trajectory]])/(10^-10 +" +
-                "Expand[pathSum[vars, generateELScore[vars][l]," +
-                "controlTrj]])) targetUnity[" +
-                "Expand[pathSum[vars, generateNScore[vars][l]," +
-                "controlTrj]]] targetUnity[" +
-                "Expand[pathSum[vars, generateELScore[vars][l], controlTrj]]]]");
-//        exeCmd("nmSolve[scoreExpression_, coeffs_, model_] := Module[{sol}," +
-//                "err = {}; step = 0; eval = 0; dimensions = Length[coeffs];" +
-//                "bestModel = 0;" +
-//                "sol = NMinimize[" +
-//                "Join[{scoreExpression}, Thread[-1.0 < # < 1.0 & /@ coeffs]]," +
-//                "coeffs," +
-//                "AccuracyGoal -> 10," +
-//                "PrecisionGoal -> 10," +
-//                "Method -> {" +
-//                "\"NelderMead\"," +
-//                "\"PostProcess\" -> False," +
-//                "\"ExpandRatio\" -> 1 + (2/Length[coeffs])," +
-//                "\"ContractRatio\" -> (3/4) - (1/(2 Length[coeffs]))," +
-//                "\"ShrinkRatio\" -> 1 - (1/Length[coeffs])}," +
-//                "MaxIterations -> 50 10^5," +
-//                "StepMonitor :> (step++; " +
-//                "If[Mod[step, 500] == 0, err = Append[err, scoreExpression];" +
-//                "bestModel = model])," +
-//                "EvaluationMonitor :> (eval++)];" +
-//                "{\"steps\" -> step, \"bestScore\" -> sol[[1]], \"solution\" -> sol[[2]]," +
-//                "\"model\" -> model /. sol[[2]]}" +
-//                "]");
-        exeCmd("nmSolve[scoreExpression_, coeffs_, model_] := Module[{sol},\n" +
-                "  err = {}; step = 0; eval = 0; dimensions = Length[coeffs]; \n" +
-                "  bestModel = 0;\n" +
-                "  sol = FindMinimum[scoreExpression,\n" +
-                "    coeffs,\n" +
-                "    Method -> \"QuasiNewton\",\n" +
-                "    AccuracyGoal -> 10,\n" +
-                "    PrecisionGoal -> 10,\n" +
-                "    MaxIterations -> 50 10^5,\n" +
-                "    StepMonitor :> (step++; \n" +
-                "      If[Mod[step, 500] == 0, err = Append[err, scoreExpression]; \n" +
-                "       bestModel = model]),\n" +
-                "    EvaluationMonitor :> (eval++)];\n" +
-                "  {\"steps\" -> step, \"bestScore\" -> sol[[1]], \"solution\" -> sol[[2]], \n" +
-                "   \"model\" -> model /. sol[[2]]}\n" +
-                "  ]");
-        exeCmd("ScoreAndGetCoefficients[polyData_, expData_, controlData_, df_] := " +
-                "Module[{vars, myPolynomial, scoreFn, result}," +
-                "vars = symbolAppend[th, ToString[#]] & /@ Range[df];" +
-                "myPolynomial = polynomialiser2[vars, polyData];" +
-                "scoreFn = " +
-                "generateScore[vars, myPolynomial[[2]], expData, controlData];" +
-                "result = nmSolve[scoreFn, myPolynomial[[1]], myPolynomial[[2]]];" +
-                "Flatten[{\"bestScore\" /. result[[2]]," +
-                " myPolynomial[[1]] /. \"solution\" /. result[[3]]}]" +
-                "]");
-        
-
+        exeCmd("data = prepareData[\"" + packagePath + "/" + dataName + "\","+ deltat + "," + df +"];");
     }
 
     public static void Shutdown() {
