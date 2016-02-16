@@ -88,10 +88,11 @@
 
 ;; @@
 (def prob_inheritance 0.75)   ;probability that terms are directly inherited from parent to child.
-(def mutate_pref 0.5)         ;prob. that "gene-replace"/"gene-add" is called when mutate is called.
+(def mutate_pref1 0.1)         ;prob. that "gene-replace"/"gene-add" is called when mutate is called.
+(def mutate_pref2 0.05)
 ;; @@
 ;; =>
-;;; {"type":"html","content":"<span class='clj-var'>#&#x27;goliath/mutate_pref</span>","value":"#'goliath/mutate_pref"}
+;;; {"type":"html","content":"<span class='clj-var'>#&#x27;goliath/mutate_pref2</span>","value":"#'goliath/mutate_pref2"}
 ;; <=
 
 ;; @@
@@ -117,14 +118,26 @@
   (let [new-gene (vec (repeatedly length #(rand-int (+ 1 max_pow)))) sp (apply + new-gene)]
     
     (if (or (< spmax sp) (= new-gene (vec (replicate length 0)) )) 
-      (new-poly-term max_pow spmax length)
+      
+      (assoc (vec (repeat length 0)) (rand-int length) 1)
+    
+      ;(new-poly-term max_pow spmax length)
       ;[0 1];;cant have this or else it will crash the mathematica
       new-gene
       )
   ))
+  
+  
 ;; @@
 ;; =>
 ;;; {"type":"html","content":"<span class='clj-var'>#&#x27;goliath/new-poly-term</span>","value":"#'goliath/new-poly-term"}
+;; <=
+
+;; @@
+(new-poly-term 10 3 3)
+;; @@
+;; =>
+;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-long'>1</span>","value":"1"},{"type":"html","content":"<span class='clj-long'>0</span>","value":"0"},{"type":"html","content":"<span class='clj-long'>0</span>","value":"0"}],"value":"[1 0 0]"}
 ;; <=
 
 ;; @@
@@ -158,6 +171,18 @@
 ;; =>
 ;;; {"type":"html","content":"<span class='clj-var'>#&#x27;goliath/distribute-parent</span>","value":"#'goliath/distribute-parent"}
 ;; <=
+
+;; **
+;;; 
+;; **
+
+;; **
+;;; ##Cross-over and mutate functions
+;; **
+
+;; **
+;;; cross-over, gene-mutate, gene-replace and gene-tweak
+;; **
 
 ;; @@
 (defn cross-over
@@ -219,19 +244,41 @@
 ;; <=
 
 ;; @@
+(defn gene-tweak
+  [indv]
+  (let [n (rand-int (count indv)) gene (nth indv n) new-gene (assoc gene (rand-int (count gene)) (rand-int power_max))]
+    (assoc indv n new-gene)
+    ))
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-var'>#&#x27;goliath/gene-tweak</span>","value":"#'goliath/gene-tweak"}
+;; <=
+
+;; @@
 (defn mutate
   "takes two genotypes and returns a mutated genotype"
   [indv]
   (let [rn (rand)]
-    (if (>= rn mutate_pref) 
-      (gene-replace indv power power_sum 1)
-      (gene-add indv power power_sum 1))
+    (if (>= rn mutate_pref1)
+        (gene-tweak indv)
+          (if (>= rn mutate_pref2) 
+          (gene-replace indv power power_sum 1)
+          (gene-add indv power power_sum 1))
+      )
     )
   )
 ;; @@
 ;; =>
 ;;; {"type":"html","content":"<span class='clj-var'>#&#x27;goliath/mutate</span>","value":"#'goliath/mutate"}
 ;; <=
+
+;; **
+;;; #Initial populations and generation-configuration
+;; **
+
+;; **
+;;; plus a little kernal opening and closing
+;; **
 
 ;; @@
 (defn random-initial-population 
@@ -307,15 +354,8 @@
 ;; <=
 
 ;; @@
-(time (def result (evolution/run-evolution generation-config initial-zeitgeist (fn [zg gc] (>= (:age zg) 1)))))
+(time (def result (evolution/run-evolution generation-config initial-zeitgeist (fn [zg gc] (>= (:age zg) 10)))))
 ;; @@
-;; ->
-;;; .&quot;Elapsed time: 23262.67769 msecs&quot;
-;;; 
-;; <-
-;; =>
-;;; {"type":"html","content":"<span class='clj-var'>#&#x27;goliath/result</span>","value":"#'goliath/result"}
-;; <=
 
 ;; @@
 (goliath.mathlink.LagrangianScore/Shutdown)
