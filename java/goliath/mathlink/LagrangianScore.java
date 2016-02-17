@@ -79,7 +79,7 @@ public class LagrangianScore {
         return (ml.getDoubleArray1());
     }
 
-
+	private static double bestScore = 1000000.0;
     // input a list of integers and it will score to the data etc
     public static synchronized double[] GetScore(int[] poly, int df) throws MathLinkException {
         //clojure will send an array of doubles
@@ -92,9 +92,12 @@ public class LagrangianScore {
             szPoly += poly[f] + (((f - (2*df-1)) % (2*df) == 0) ? "" : ",");
         }
         szPoly += "}}";
-        System.out.println("Poly received: " + szPoly);
+        double[] sc = exeCmdDoubleArray("ScoreAndGetCoefficients[" + szPoly + ", data[[1]], data[[2]],"+df+"]");
+
+	  bestScore = (sc[0] < bestScore)? sc[0] : bestScore;
+        System.out.println("" + bestScore);
         
-        return (exeCmdDoubleArray("ScoreAndGetCoefficients[" + szPoly + ", data[[1]], data[[2]],"+df+"]"));
+        return sc;
 
     }
 
