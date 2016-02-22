@@ -53,8 +53,6 @@ Plus@@((score/.toData)/.p)
 
 generateScore[vars_,l_,trajectory_,controlTrj_]:=Log[(10^-10+Expand[pathSum[vars,generateELScore[vars][l],trajectory]])/(10^-10+Expand[pathSum[vars,generateELScore[vars][l],controlTrj]]) targetUnity[Expand[pathSum[vars,generateNScore[vars][l],controlTrj]]]targetUnity[Expand[pathSum[vars,generateELScore[vars][l],controlTrj]]]]
 
-err={};step=0;eval=0;dimensions=0;bestModel=0;
-
 nmSolve[scoreExpression_,coeffs_,model_]:=Module[{sol},
 err={};step=0;eval=0;dimensions=Length[coeffs];bestModel=0;
 sol=FindMinimum[scoreExpression,
@@ -65,21 +63,23 @@ PrecisionGoal->10,
 MaxIterations->50 10^5,
 StepMonitor:>(step++;If[Mod[step,500]==0,err=Append[err,scoreExpression];bestModel=model]),
 EvaluationMonitor:>(eval++)];
-{"steps"->step,"bestScore"->sol[[1]],"solution"->sol[[2]],"model"->model/.sol[[2]]}
+{sol[[1]],sol[[2]]}
 ]
 
 polynomialiser2[vars_, indv_]:= Module[{nVars, fullVarList, monoList, coeffs},
 nVars = 2*Length[vars];
-fullVarList=Flatten[{#,dotVar[#]}&/@vars];
+fullVarList=Flatten[{vars, dotVar[#]&/@vars}];
 monoList=Times@@(fullVarList^#)& /@ indv;
 coeffs = Symbol["c"<>ToString[#]]&/@Range[Length[monoList]];
 {coeffs, monoList.coeffs}
 ];
 
-scoreAndGetCoefficients[polyData_, expData_, controlData_]:=Module[{vars, myPolynomial, scoreFn, result},
-vars = {th1, th2};
+scoreAndGetCoefficients[polyData_, expData_, controlData_, df_]:=Module[{vars, myPolynomial, scoreFn, result},
+vars = symbolAppend[th, ToString[#]] & /@ Range[df];
 myPolynomial = polynomialiser2[vars, polyData];
 scoreFn = generateScore[vars,myPolynomial[[2]], expData, controlData];
 result = nmSolve[scoreFn, myPolynomial[[1]], myPolynomial[[2]]];
-Flatten[{"bestScore"/.result[[2]], myPolynomial[[1]]/."solution"/.result[[3]]}]
+Flatten[{result[[1]], myPolynomial[[1]]/.result[[2]]}]
 ]
+
+
