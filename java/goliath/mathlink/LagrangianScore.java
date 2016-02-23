@@ -96,8 +96,8 @@ public class LagrangianScore {
         //System.out.println(szPoly);
         double[] sc = exeCmdDoubleArray("scoreAndGetCoefficients[" + szPoly + ", data[[1]], data[[2]],"+df+"]");
 
-	bestScore = (sc[0] < bestScore)? sc[0] : bestScore;
-        System.out.println("" + bestScore);
+	//bestScore = (sc[0] < bestScore)? sc[0] : bestScore;
+        //System.out.println("" + bestScore);
 
         return sc;
 
