@@ -1,0 +1,200 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      6670,        191]
+NotebookOptionsPosition[      5918,        161]
+NotebookOutlinePosition[      6291,        177]
+CellTagsIndexPosition[      6248,        174]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["\<\
+Find Score with Data Created with Accel and Velocity Components\
+\>", "Title",
+ CellChangeTimes->{{3.665314039503337*^9, 3.66531405612513*^9}}],
+
+Cell["\<\
+This worksheet tests out the prepareDataSim function which loads the \
+simulated data (complete with th1d and th1dd etc) and then scores it. Having \
+the \[OpenCurlyQuote]perfect\[CloseCurlyQuote] score makes a big difference \
+giving a value of -22.8 and -21.1 compared with values of -12 -13 with the \
+use of discrete differential.\
+\>", "Text",
+ CellChangeTimes->{{3.6653230731136107`*^9, 3.665323150801451*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+  "Get", "[", 
+   "\"\<C:/Users/User/Goliath/resources/LagrangeSolverCompact.m\>\"", "]"}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.665310815543906*^9, 3.6653108722331753`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"data", " ", "=", " ", 
+   RowBox[{"prepareDataSim", "[", 
+    RowBox[{
+    "\"\<C:/Users/User/Goliath/resources/sho_coupled_0.1_sim.csv\>\"", ",", 
+     " ", "0.1", ",", " ", "2"}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.665310890503123*^9, 3.6653109605698524`*^9}, {
+  3.665311399493731*^9, 3.6653113997599216`*^9}, {3.6653115529676437`*^9, 
+  3.6653115531417723`*^9}, {3.665312387178089*^9, 3.6653123917713184`*^9}, {
+  3.665312547260722*^9, 3.6653125499395933`*^9}, {3.6653127261320324`*^9, 
+  3.665312730492155*^9}, {3.665313630746202*^9, 3.665313634285714*^9}, {
+  3.6653137772021427`*^9, 3.6653138274148073`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"scoreAndGetCoefficients", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"2", ",", "0", ",", "0", ",", "0"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "2", ",", "0", ",", "0"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "1", ",", "0", ",", "0"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "0", ",", "2", ",", "0"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "0", ",", "0", ",", "2"}], "}"}]}], "}"}], ",", 
+   RowBox[{"data", "[", 
+    RowBox[{"[", "1", "]"}], "]"}], ",", " ", 
+   RowBox[{"data", "[", 
+    RowBox[{"[", "2", "]"}], "]"}], ",", " ", "2"}], "]"}]], "Input",
+ CellChangeTimes->{{3.6653137961796365`*^9, 3.6653138014183264`*^9}, {
+  3.6653138315457273`*^9, 3.6653138409313755`*^9}, {3.6653138813961267`*^9, 
+  3.665313953762467*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"FindMinimum", "::", "lstol"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"The line search decreased the step size to within the \
+tolerance specified by AccuracyGoal and PrecisionGoal but was unable to find \
+a sufficient decrease in the function. You may need more than \
+\[NoBreak]\\!\\(MachinePrecision\\)\[NoBreak] digits of working precision to \
+meet these tolerances. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/FindMinimum/lstol\\\", ButtonNote -> \
+\\\"FindMinimum::lstol\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.6653139547561736`*^9, 3.665321792016667*^9, 
+  3.6653225937489448`*^9, 3.665323038893263*^9}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"-", "22.806634470647438`"}], ",", "0.18854088335408387`", ",", 
+   "0.09427039337015511`", ",", 
+   RowBox[{"-", "0.188540811738729`"}], ",", 
+   RowBox[{"-", "0.09427045853381483`"}], ",", 
+   RowBox[{"-", "0.09427042790594096`"}]}], "}"}]], "Output",
+ CellChangeTimes->{{3.665313798236084*^9, 3.665313801988746*^9}, {
+   3.6653138324363413`*^9, 3.665313841492771*^9}, {3.6653139284565125`*^9, 
+   3.665313954758176*^9}, 3.6653217920196686`*^9, 3.665322593751931*^9, 
+   3.665323038896278*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"data1", " ", "=", " ", 
+   RowBox[{"prepareDataSim", "[", 
+    RowBox[{
+    "\"\<C:/Users/User/Goliath/resources/sho_0.1_sim.csv\>\"", ",", " ", 
+     "0.1", ",", " ", "1"}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.6653139715100937`*^9, 3.6653139793316154`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"scoreAndGetCoefficients", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"2", ",", "0"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "2"}], "}"}]}], "}"}], ",", 
+   RowBox[{"data1", "[", 
+    RowBox[{"[", "1", "]"}], "]"}], ",", " ", 
+   RowBox[{"data1", "[", 
+    RowBox[{"[", "2", "]"}], "]"}], ",", " ", "1"}], "]"}]], "Input",
+ CellChangeTimes->{{3.665313995509101*^9, 3.6653140157224555`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  StyleBox[
+   RowBox[{"FindMinimum", "::", "sdprec"}], "MessageName"], 
+  RowBox[{
+  ":", " "}], "\<\"Line search unable to find a sufficient decrease in the \
+function value with \[NoBreak]\\!\\(MachinePrecision\\)\[NoBreak] digit \
+precision. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", ButtonStyle->\\\"Link\
+\\\", ButtonFrame->None, ButtonData:>\\\"paclet:ref/FindMinimum\\\", \
+ButtonNote -> \\\"FindMinimum::sdprec\\\"]\\)\"\>"}]], "Message", "MSG",
+ CellChangeTimes->{3.665314017440671*^9, 3.6653230489694133`*^9}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"-", "21.102992280328287`"}], ",", "0.2778870190840945`", ",", 
+   RowBox[{"-", "0.2778869962176487`"}]}], "}"}]], "Output",
+ CellChangeTimes->{{3.6653140052580204`*^9, 3.6653140174436865`*^9}, 
+   3.6653230489714155`*^9}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowToolbars->"EditBar",
+WindowSize->{1366, 685},
+WindowMargins->{{-8, Automatic}, {Automatic, -8}},
+FrontEndVersion->"10.0 for Microsoft Windows (64-bit) (December 4, 2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 153, 3, 101, "Title"],
+Cell[736, 27, 426, 7, 49, "Text"],
+Cell[1165, 36, 214, 6, 31, "Input"],
+Cell[1382, 44, 663, 12, 31, "Input"],
+Cell[CellGroupData[{
+Cell[2070, 60, 861, 21, 31, "Input"],
+Cell[2934, 83, 768, 14, 39, "Message"],
+Cell[3705, 99, 546, 11, 31, "Output"]
+}, Open  ]],
+Cell[4266, 113, 305, 7, 31, "Input"],
+Cell[CellGroupData[{
+Cell[4596, 124, 468, 13, 31, "Input"],
+Cell[5067, 139, 547, 10, 21, "Message"],
+Cell[5617, 151, 273, 6, 31, "Output"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)

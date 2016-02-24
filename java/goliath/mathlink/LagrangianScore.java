@@ -109,6 +109,14 @@ public class LagrangianScore {
         exeCmd("Get[\"" + packagePath + "" + "LagrangeSolverCompact.m\"]");
         exeCmd("data = prepareData[\"" + packagePath + "" + dataName + "\","+ deltat + "," + df +"]");
     }
+    
+    public static void InitFunctionsSim(String mathPath, String packagePath, String dataName, double deltat, int df) throws MathLinkException {
+        OpenLink(mathPath);
+        exeCmd("Get[\"" + packagePath + "" + "LagrangeSolverCompact.m\"]");
+        exeCmd("data = prepareDataSim[\"" + packagePath + "" + dataName + "\","+ deltat + "," + df +"]");
+        //processes the data with vels and accels
+     
+    }
 
     public static void Shutdown() {
         

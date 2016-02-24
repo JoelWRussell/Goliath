@@ -25,6 +25,16 @@ myControlData = makeControlTrajectory[vars, times[[Length[times]]], deltat];
 {myExperimentalData, myControlData}
 ]
 
+prepareDataSim[sz_, deltat_, df_] := Module[
+  {expD, times, vars, expTh, expW, expA,  myExperimentalData, myControlData},
+expD = Transpose[Partition[ ReadList[ sz, Number, RecordSeparators -> {","}], 3 df]];
+vars = symbolAppend[th, ToString[#]] & /@ Range[df];
+times =  Range[0, (Length[expD[[1]]] - 1)]*deltat;
+myExperimentalData = Flatten[{vars[[#]] -> expD[[#]], symbolAppend[vars[[#]], "d"]->expD[[#+df]], symbolAppend[vars[[#]], "dd"]->expD[[#+2 df]] } & /@ Range[df]];
+myControlData = makeControlTrajectory[vars, times[[Length[times]]], deltat];
+{myExperimentalData, myControlData}
+]
+
 generateTransformations[vars_]:=Module[{dotVars,toTimeDependent,toDerivatives},
 dotVars=dotVar/@vars;
 toTimeDependent=#->#[t]&/@Join[vars,dotVars];
