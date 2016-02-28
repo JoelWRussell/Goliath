@@ -58,7 +58,7 @@ OS
 mathKernelSz
 ;; @@
 ;; =>
-;;; {"type":"html","content":"<span class='clj-string'>&quot;c:/program files/wolfram research/mathematica/10.0/mathkernel.exe&quot;</span>","value":"\"c:/program files/wolfram research/mathematica/10.0/mathkernel.exe\""}
+;;; {"type":"html","content":"<span class='clj-string'>&quot;/Applications/Mathematica.app/Contents/MacOS/MathKernel&quot;</span>","value":"\"/Applications/Mathematica.app/Contents/MacOS/MathKernel\""}
 ;; <=
 
 ;; **
@@ -97,7 +97,7 @@ mathKernelSz
 ;; <=
 
 ;; @@
-(def prob_inheritance 0.75) ;;to do with crossover  ;probability that terms are directly inherited from parent to child.
+(def prob_inheritance 0.8) ;;to do with crossover  ;probability that terms are directly inherited from parent to child.
 
 (def mutate_pref1 0.8)
 (def mutate_pref2 0.8)
@@ -138,9 +138,9 @@ mathKernelSz
     
     (if (or (< spmax sp) (= new-gene (vec (replicate length 0)) )) 
       
-      (assoc (vec (repeat length 0)) (rand-int length) 1)
+      ;(assoc (vec (repeat length 0)) (rand-int length) 1)
     
-      ;(new-poly-term max_pow spmax length)
+      (new-poly-term max_pow spmax length)
       ;[0 1];;cant have this or else it will crash the mathematica
       new-gene
       )
@@ -153,8 +153,6 @@ mathKernelSz
 ;; <=
 
 ;; @@
-
-
 (defn create-genotype
   
   "creates a new individual of length between 1 and max_length decided at random.
@@ -185,10 +183,6 @@ mathKernelSz
 ;; =>
 ;;; {"type":"html","content":"<span class='clj-var'>#&#x27;goliath/distribute-parent</span>","value":"#'goliath/distribute-parent"}
 ;; <=
-
-;; **
-;;; 
-;; **
 
 ;; **
 ;;; ##Cross-over and mutate functions
@@ -352,11 +346,64 @@ mathKernelSz
 
 ;; @@
 (def initial-zeitgeist (evolution/make-zeitgeist (random-initial-population 100 poly_length power power_sum term_length)))
-
 ;; @@
 ;; =>
 ;;; {"type":"html","content":"<span class='clj-var'>#&#x27;goliath/initial-zeitgeist</span>","value":"#'goliath/initial-zeitgeist"}
 ;; <=
+
+;; **
+;;; ## Innitial Zeitgeist Checks 
+;;; 
+;;; A few checks to assess the 'health' and diversity of the innitial zeitgiest population.
+;;; 
+;;; Considered extremely privitol in generating valid solutions, to start with a healthy population of individuals.
+;;; 
+;;; 
+;;; **Number frequency**
+;;; - The frequency the a given number appears within a genotype in a population.
+;; **
+
+;; @@
+; take all poly terms from all individiuals and flatten them into one lazy sequence, perform a frequency count of the numbers present in this sequence containing all recurring numbers. 
+
+
+(sort (frequencies (flatten (map :genotype (:rabble initial-zeitgeist)))))   
+
+;Graphical plot of above.
+
+(plot/list-plot (mapv second (sort (frequencies (flatten (map :genotype (:rabble initial-zeitgeist)))))) :colour 'red')
+
+;total
+
+(count (flatten (map :genotype (:rabble initial-zeitgeist))))
+
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-unkown'>1844</span>","value":"1844"}
+;; <=
+
+;; **
+;;; **Length of Genotypes**
+;;; 
+;;; Lengths of generated polynomils within the innitial populaiton
+;;; 
+;;; 
+;; **
+
+;; @@
+;;e.g   [[1 2 4 5] [1 2 3 4]]  length = 2
+
+(def l_o_g (sort (frequencies (mapv count (map :genotype (:rabble initial-zeitgeist))))))
+
+(plot/list-plot l_o_g :plot-range [:all [0  (apply max (map second l_o_g))]])
+;; @@
+;; =>
+;;; {"type":"vega","content":{"axes":[{"scale":"x","type":"x"},{"scale":"y","type":"y"}],"scales":[{"name":"x","type":"linear","range":"width","zero":false,"domain":{"data":"88d0014f-c79d-41f5-bb86-1e5f263bf8c5","field":"data.x"}},{"name":"y","type":"linear","range":"height","nice":true,"zero":false,"domain":[0,16]}],"marks":[{"type":"symbol","from":{"data":"88d0014f-c79d-41f5-bb86-1e5f263bf8c5"},"properties":{"enter":{"x":{"scale":"x","field":"data.x"},"y":{"scale":"y","field":"data.y"},"fill":{"value":"steelblue"},"fillOpacity":{"value":1}},"update":{"shape":"circle","size":{"value":70},"stroke":{"value":"transparent"}},"hover":{"size":{"value":210},"stroke":{"value":"white"}}}}],"data":[{"name":"88d0014f-c79d-41f5-bb86-1e5f263bf8c5","values":[{"x":1,"y":14},{"x":2,"y":11},{"x":3,"y":12},{"x":4,"y":16},{"x":5,"y":11},{"x":6,"y":10},{"x":7,"y":6},{"x":8,"y":12},{"x":9,"y":8}]}],"width":400,"height":247.2187957763672,"padding":{"bottom":20,"top":10,"right":10,"left":50}},"value":"#gorilla_repl.vega.VegaView{:content {:axes [{:scale \"x\", :type \"x\"} {:scale \"y\", :type \"y\"}], :scales [{:name \"x\", :type \"linear\", :range \"width\", :zero false, :domain {:data \"88d0014f-c79d-41f5-bb86-1e5f263bf8c5\", :field \"data.x\"}} {:name \"y\", :type \"linear\", :range \"height\", :nice true, :zero false, :domain [0 16]}], :marks [{:type \"symbol\", :from {:data \"88d0014f-c79d-41f5-bb86-1e5f263bf8c5\"}, :properties {:enter {:x {:scale \"x\", :field \"data.x\"}, :y {:scale \"y\", :field \"data.y\"}, :fill {:value \"steelblue\"}, :fillOpacity {:value 1}}, :update {:shape \"circle\", :size {:value 70}, :stroke {:value \"transparent\"}}, :hover {:size {:value 210}, :stroke {:value \"white\"}}}}], :data [{:name \"88d0014f-c79d-41f5-bb86-1e5f263bf8c5\", :values ({:x 1, :y 14} {:x 2, :y 11} {:x 3, :y 12} {:x 4, :y 16} {:x 5, :y 11} {:x 6, :y 10} {:x 7, :y 6} {:x 8, :y 12} {:x 9, :y 8})}], :width 400, :height 247.2188, :padding {:bottom 20, :top 10, :right 10, :left 50}}}"}
+;; <=
+
+;; **
+;;; ** Sum of powers in a gene**
+;; **
 
 ;; @@
 ;;this function uses discrete differential to find speeds 
