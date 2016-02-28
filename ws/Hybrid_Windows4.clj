@@ -33,11 +33,10 @@
             [darwin.evolution.transform :as transform]
             [darwin.evolution.pareto :as pareto]
             [darwin.algorithms.spea2 :as spea2]
-            [criterium.core :as criterium])
+            [criterium.core :as criterium]
+            [semantic-csv.core :as csv])
   (:import [com.wolfram.jlink]
       [goliath.mathlink])
-  
-  
   )
 ;; @@
 ;; =>
@@ -70,6 +69,31 @@ mathKernelSz
 ;; @@
 ;; =>
 ;;; {"type":"html","content":"<span class='clj-var'>#&#x27;goliath/experimentalDataSz</span>","value":"#'goliath/experimentalDataSz"}
+;; <=
+
+;; @@
+(def dat (mapv #(vector (first %))
+               (csv/slurp-csv "resources/sho_coupled_0.1_sim.csv"
+  							  :header false
+                              :cast-fns {0 #(Double/parseDouble %) 1 #(Double/parseDouble %)})))
+
+(def dat2 (mapv #(vector (second %))
+               (csv/slurp-csv "resources/sho_coupled_0.1_sim.csv"
+                              :header false
+                              :cast-fns {0 #(Double/parseDouble %) 1 #(Double/parseDouble %)})))
+
+"Theta"
+
+(plot/list-plot (mapv first dat) :joined true)
+
+"Omega"
+
+(plot/list-plot (mapv first dat2) :joined true)
+
+
+;; @@
+;; =>
+;;; {"type":"vega","content":{"axes":[{"scale":"x","type":"x"},{"scale":"y","type":"y"}],"scales":[{"name":"x","type":"linear","range":"width","zero":false,"domain":{"data":"b5cc8309-1056-4033-9976-89ee29f34157","field":"data.x"}},{"name":"y","type":"linear","range":"height","nice":true,"zero":false,"domain":{"data":"b5cc8309-1056-4033-9976-89ee29f34157","field":"data.y"}}],"marks":[{"type":"line","from":{"data":"b5cc8309-1056-4033-9976-89ee29f34157"},"properties":{"enter":{"x":{"scale":"x","field":"data.x"},"y":{"scale":"y","field":"data.y"},"stroke":{"value":"#FF29D2"},"strokeWidth":{"value":2},"strokeOpacity":{"value":1}}}}],"data":[{"name":"b5cc8309-1056-4033-9976-89ee29f34157","values":[{"x":0,"y":2.0},{"x":1,"y":1.9284804760741014},{"x":2,"y":1.847869707654912},{"x":3,"y":1.759147940170956},{"x":4,"y":1.6633539300874196},{"x":5,"y":1.5615627444976496},{"x":6,"y":1.4548630903699578},{"x":7,"y":1.3443348754972466},{"x":8,"y":1.2310275172785075},{"x":9,"y":1.1159395524551143},{"x":10,"y":1.0000000198584484},{"x":11,"y":0.884052161868249},{"x":12,"y":0.7688397122512814},{"x":13,"y":0.6549961985048567},{"x":14,"y":0.5430374695353829},{"x":15,"y":0.4333576046967714},{"x":16,"y":0.32622828094447165},{"x":17,"y":0.2218015812237824},{"x":18,"y":0.12011612593437726},{"x":19,"y":0.02110633326264301},{"x":20,"y":-0.07538547415089168},{"x":21,"y":-0.16959447211977985},{"x":22,"y":-0.2618166633840412},{"x":23,"y":-0.35239062947183336},{"x":24,"y":-0.4416781845088593},{"x":25,"y":-0.5300445077444007},{"x":26,"y":-0.6178383035773294},{"x":27,"y":-0.705372547526059},{"x":28,"y":-0.7929063568341025},{"x":29,"y":-0.88062849998643},{"x":30,"y":-0.9686430148760465},{"x":31,"y":-1.0569573420664895},{"x":32,"y":-1.1454733229161638},{"x":33,"y":-1.2339813292889525},{"x":34,"y":-1.3221577103472784},{"x":35,"y":-1.4095656548744435},{"x":36,"y":-1.4956594741653633},{"x":37,"y":-1.5797922236920523},{"x":38,"y":-1.6612264815843205},{"x":39,"y":-1.7391480398024644},{"x":40,"y":-1.8126821585831931},{"x":41,"y":-1.8809119854688685},{"x":42,"y":-1.9428986720936203},{"x":43,"y":-1.9977026777887568},{"x":44,"y":-2.044405720677371},{"x":45,"y":-2.082132804456243},{"x":46,"y":-2.110073758399698},{"x":47,"y":-2.1275037306372786},{"x":48,"y":-2.133802107707231},{"x":49,"y":-2.128469353974073},{"x":50,"y":-2.1111413434194244},{"x":51,"y":-2.0816007929888336},{"x":52,"y":-2.0397854974273417},{"x":53,"y":-1.9857931381250578},{"x":54,"y":-1.9198825296991564},{"x":55,"y":-1.8424712574666764},{"x":56,"y":-1.7541297447766149},{"x":57,"y":-1.655571898771775},{"x":58,"y":-1.5476425469860653},{"x":59,"y":-1.431301972250347},{"x":60,"y":-1.3076079261555191},{"x":61,"y":-1.1776955628380277},{"x":62,"y":-1.0427557895776662},{"x":63,"y":-0.9040125671716012},{"x":64,"y":-0.7626997233384684},{"x":65,"y":-0.6200378489656382},{"x":66,"y":-0.4772118474306306},{"x":67,"y":-0.33534968782029867},{"x":68,"y":-0.19550287980466313},{"x":69,"y":-0.05862913648959707},{"x":70,"y":0.07442234839953822},{"x":71,"y":0.2029226740930839},{"x":72,"y":0.3262717872830035},{"x":73,"y":0.44400362591251114},{"x":74,"y":0.5557877774505213},{"x":75,"y":0.6614276207541374},{"x":76,"y":0.760855066199606},{"x":77,"y":0.8541220585200456},{"x":78,"y":0.9413890972582583},{"x":79,"y":1.0229111375410067},{"x":80,"y":1.0990212412755835},{"x":81,"y":1.170112478892747},{"x":82,"y":1.2366185681636452},{"x":83,"y":1.2989937911787741},{"x":84,"y":1.3576927683000244},{"x":85,"y":1.4131506108921674},{"x":86,"y":1.4657640511313044},{"x":87,"y":1.515874021345053},{"x":88,"y":1.5637502040641278},{"x":89,"y":1.6095779550129374},{"x":90,"y":1.6534479800561634},{"x":91,"y":1.6953490462788887},{"x":92,"y":1.7351639432791182},{"x":93,"y":1.7726688124436725},{"x":94,"y":1.8075358783854574},{"x":95,"y":1.8393395230260274},{"x":96,"y":1.8675655478760536},{"x":97,"y":1.8916234009456208},{"x":98,"y":1.910861042246055},{"x":99,"y":1.9245820686908393},{"x":100,"y":1.9320646410224958}]}],"width":400,"height":247.2187957763672,"padding":{"bottom":20,"top":10,"right":10,"left":50}},"value":"#gorilla_repl.vega.VegaView{:content {:axes [{:scale \"x\", :type \"x\"} {:scale \"y\", :type \"y\"}], :scales [{:name \"x\", :type \"linear\", :range \"width\", :zero false, :domain {:data \"b5cc8309-1056-4033-9976-89ee29f34157\", :field \"data.x\"}} {:name \"y\", :type \"linear\", :range \"height\", :nice true, :zero false, :domain {:data \"b5cc8309-1056-4033-9976-89ee29f34157\", :field \"data.y\"}}], :marks [{:type \"line\", :from {:data \"b5cc8309-1056-4033-9976-89ee29f34157\"}, :properties {:enter {:x {:scale \"x\", :field \"data.x\"}, :y {:scale \"y\", :field \"data.y\"}, :stroke {:value \"#FF29D2\"}, :strokeWidth {:value 2}, :strokeOpacity {:value 1}}}}], :data [{:name \"b5cc8309-1056-4033-9976-89ee29f34157\", :values ({:x 0, :y 2.0} {:x 1, :y 1.9284804760741014} {:x 2, :y 1.847869707654912} {:x 3, :y 1.759147940170956} {:x 4, :y 1.6633539300874196} {:x 5, :y 1.5615627444976496} {:x 6, :y 1.4548630903699578} {:x 7, :y 1.3443348754972466} {:x 8, :y 1.2310275172785075} {:x 9, :y 1.1159395524551143} {:x 10, :y 1.0000000198584484} {:x 11, :y 0.884052161868249} {:x 12, :y 0.7688397122512814} {:x 13, :y 0.6549961985048567} {:x 14, :y 0.5430374695353829} {:x 15, :y 0.4333576046967714} {:x 16, :y 0.32622828094447165} {:x 17, :y 0.2218015812237824} {:x 18, :y 0.12011612593437726} {:x 19, :y 0.02110633326264301} {:x 20, :y -0.07538547415089168} {:x 21, :y -0.16959447211977985} {:x 22, :y -0.2618166633840412} {:x 23, :y -0.35239062947183336} {:x 24, :y -0.4416781845088593} {:x 25, :y -0.5300445077444007} {:x 26, :y -0.6178383035773294} {:x 27, :y -0.705372547526059} {:x 28, :y -0.7929063568341025} {:x 29, :y -0.88062849998643} {:x 30, :y -0.9686430148760465} {:x 31, :y -1.0569573420664895} {:x 32, :y -1.1454733229161638} {:x 33, :y -1.2339813292889525} {:x 34, :y -1.3221577103472784} {:x 35, :y -1.4095656548744435} {:x 36, :y -1.4956594741653633} {:x 37, :y -1.5797922236920523} {:x 38, :y -1.6612264815843205} {:x 39, :y -1.7391480398024644} {:x 40, :y -1.8126821585831931} {:x 41, :y -1.8809119854688685} {:x 42, :y -1.9428986720936203} {:x 43, :y -1.9977026777887568} {:x 44, :y -2.044405720677371} {:x 45, :y -2.082132804456243} {:x 46, :y -2.110073758399698} {:x 47, :y -2.1275037306372786} {:x 48, :y -2.133802107707231} {:x 49, :y -2.128469353974073} {:x 50, :y -2.1111413434194244} {:x 51, :y -2.0816007929888336} {:x 52, :y -2.0397854974273417} {:x 53, :y -1.9857931381250578} {:x 54, :y -1.9198825296991564} {:x 55, :y -1.8424712574666764} {:x 56, :y -1.7541297447766149} {:x 57, :y -1.655571898771775} {:x 58, :y -1.5476425469860653} {:x 59, :y -1.431301972250347} {:x 60, :y -1.3076079261555191} {:x 61, :y -1.1776955628380277} {:x 62, :y -1.0427557895776662} {:x 63, :y -0.9040125671716012} {:x 64, :y -0.7626997233384684} {:x 65, :y -0.6200378489656382} {:x 66, :y -0.4772118474306306} {:x 67, :y -0.33534968782029867} {:x 68, :y -0.19550287980466313} {:x 69, :y -0.05862913648959707} {:x 70, :y 0.07442234839953822} {:x 71, :y 0.2029226740930839} {:x 72, :y 0.3262717872830035} {:x 73, :y 0.44400362591251114} {:x 74, :y 0.5557877774505213} {:x 75, :y 0.6614276207541374} {:x 76, :y 0.760855066199606} {:x 77, :y 0.8541220585200456} {:x 78, :y 0.9413890972582583} {:x 79, :y 1.0229111375410067} {:x 80, :y 1.0990212412755835} {:x 81, :y 1.170112478892747} {:x 82, :y 1.2366185681636452} {:x 83, :y 1.2989937911787741} {:x 84, :y 1.3576927683000244} {:x 85, :y 1.4131506108921674} {:x 86, :y 1.4657640511313044} {:x 87, :y 1.515874021345053} {:x 88, :y 1.5637502040641278} {:x 89, :y 1.6095779550129374} {:x 90, :y 1.6534479800561634} {:x 91, :y 1.6953490462788887} {:x 92, :y 1.7351639432791182} {:x 93, :y 1.7726688124436725} {:x 94, :y 1.8075358783854574} {:x 95, :y 1.8393395230260274} {:x 96, :y 1.8675655478760536} {:x 97, :y 1.8916234009456208} {:x 98, :y 1.910861042246055} {:x 99, :y 1.9245820686908393} {:x 100, :y 1.9320646410224958})}], :width 400, :height 247.2188, :padding {:bottom 20, :top 10, :right 10, :left 50}}}"}
 ;; <=
 
 ;; **
@@ -364,6 +388,10 @@ mathKernelSz
 ;; **
 
 ;; @@
+
+;; @@
+
+;; @@
 ; take all poly terms from all individiuals and flatten them into one lazy sequence, perform a frequency count of the numbers present in this sequence containing all recurring numbers. 
 
 
@@ -373,9 +401,11 @@ mathKernelSz
 
 (plot/list-plot (mapv second (sort (frequencies (flatten (map :genotype (:rabble initial-zeitgeist)))))) :colour 'red')
 
-;total
 
-(count (flatten (map :genotype (:rabble initial-zeitgeist))))
+
+"Total terms of entire population :" (count (flatten (map :genotype (:rabble initial-zeitgeist))))
+
+
 
 ;; @@
 ;; =>
@@ -396,6 +426,9 @@ mathKernelSz
 (def l_o_g (sort (frequencies (mapv count (map :genotype (:rabble initial-zeitgeist))))))
 
 (plot/list-plot l_o_g :plot-range [:all [0  (apply max (map second l_o_g))]])
+
+;y - frequency 
+;x - length of polynomail (number of terms within a polynomial expression)
 ;; @@
 ;; =>
 ;;; {"type":"vega","content":{"axes":[{"scale":"x","type":"x"},{"scale":"y","type":"y"}],"scales":[{"name":"x","type":"linear","range":"width","zero":false,"domain":{"data":"88d0014f-c79d-41f5-bb86-1e5f263bf8c5","field":"data.x"}},{"name":"y","type":"linear","range":"height","nice":true,"zero":false,"domain":[0,16]}],"marks":[{"type":"symbol","from":{"data":"88d0014f-c79d-41f5-bb86-1e5f263bf8c5"},"properties":{"enter":{"x":{"scale":"x","field":"data.x"},"y":{"scale":"y","field":"data.y"},"fill":{"value":"steelblue"},"fillOpacity":{"value":1}},"update":{"shape":"circle","size":{"value":70},"stroke":{"value":"transparent"}},"hover":{"size":{"value":210},"stroke":{"value":"white"}}}}],"data":[{"name":"88d0014f-c79d-41f5-bb86-1e5f263bf8c5","values":[{"x":1,"y":14},{"x":2,"y":11},{"x":3,"y":12},{"x":4,"y":16},{"x":5,"y":11},{"x":6,"y":10},{"x":7,"y":6},{"x":8,"y":12},{"x":9,"y":8}]}],"width":400,"height":247.2187957763672,"padding":{"bottom":20,"top":10,"right":10,"left":50}},"value":"#gorilla_repl.vega.VegaView{:content {:axes [{:scale \"x\", :type \"x\"} {:scale \"y\", :type \"y\"}], :scales [{:name \"x\", :type \"linear\", :range \"width\", :zero false, :domain {:data \"88d0014f-c79d-41f5-bb86-1e5f263bf8c5\", :field \"data.x\"}} {:name \"y\", :type \"linear\", :range \"height\", :nice true, :zero false, :domain [0 16]}], :marks [{:type \"symbol\", :from {:data \"88d0014f-c79d-41f5-bb86-1e5f263bf8c5\"}, :properties {:enter {:x {:scale \"x\", :field \"data.x\"}, :y {:scale \"y\", :field \"data.y\"}, :fill {:value \"steelblue\"}, :fillOpacity {:value 1}}, :update {:shape \"circle\", :size {:value 70}, :stroke {:value \"transparent\"}}, :hover {:size {:value 210}, :stroke {:value \"white\"}}}}], :data [{:name \"88d0014f-c79d-41f5-bb86-1e5f263bf8c5\", :values ({:x 1, :y 14} {:x 2, :y 11} {:x 3, :y 12} {:x 4, :y 16} {:x 5, :y 11} {:x 6, :y 10} {:x 7, :y 6} {:x 8, :y 12} {:x 9, :y 8})}], :width 400, :height 247.2188, :padding {:bottom 20, :top 10, :right 10, :left 50}}}"}
@@ -403,10 +436,31 @@ mathKernelSz
 
 ;; **
 ;;; ** Sum of powers in a gene**
+;;; 
+;;; Shows the distributioons of term power sums in created polynomials. (This method does not keep track of which genes belong to which individuals.
 ;; **
 
 ;; @@
-;;this function uses discrete differential to find speeds 
+(defn power_sum
+  [x]
+  (apply + x))
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-var'>#&#x27;goliath/power_sum</span>","value":"#'goliath/power_sum"}
+;; <=
+
+;; @@
+(plot/list-plot (sort (frequencies (flatten (map (fn [x] (map power_sum (:genotype x))) (:rabble initial-zeitgeist))))))
+
+;y - frequency 
+;x - sum of powers in polynomial term
+;; @@
+;; =>
+;;; {"type":"vega","content":{"axes":[{"scale":"x","type":"x"},{"scale":"y","type":"y"}],"scales":[{"name":"x","type":"linear","range":"width","zero":false,"domain":{"data":"47fd33be-0b88-4816-97db-f48d1016c954","field":"data.x"}},{"name":"y","type":"linear","range":"height","nice":true,"zero":false,"domain":{"data":"47fd33be-0b88-4816-97db-f48d1016c954","field":"data.y"}}],"marks":[{"type":"symbol","from":{"data":"47fd33be-0b88-4816-97db-f48d1016c954"},"properties":{"enter":{"x":{"scale":"x","field":"data.x"},"y":{"scale":"y","field":"data.y"},"fill":{"value":"steelblue"},"fillOpacity":{"value":1}},"update":{"shape":"circle","size":{"value":70},"stroke":{"value":"transparent"}},"hover":{"size":{"value":210},"stroke":{"value":"white"}}}}],"data":[{"name":"47fd33be-0b88-4816-97db-f48d1016c954","values":[{"x":2,"y":4},{"x":3,"y":14},{"x":4,"y":15},{"x":5,"y":20},{"x":6,"y":42},{"x":7,"y":60},{"x":8,"y":93},{"x":9,"y":93},{"x":10,"y":120}]}],"width":400,"height":247.2187957763672,"padding":{"bottom":20,"top":10,"right":10,"left":50}},"value":"#gorilla_repl.vega.VegaView{:content {:axes [{:scale \"x\", :type \"x\"} {:scale \"y\", :type \"y\"}], :scales [{:name \"x\", :type \"linear\", :range \"width\", :zero false, :domain {:data \"47fd33be-0b88-4816-97db-f48d1016c954\", :field \"data.x\"}} {:name \"y\", :type \"linear\", :range \"height\", :nice true, :zero false, :domain {:data \"47fd33be-0b88-4816-97db-f48d1016c954\", :field \"data.y\"}}], :marks [{:type \"symbol\", :from {:data \"47fd33be-0b88-4816-97db-f48d1016c954\"}, :properties {:enter {:x {:scale \"x\", :field \"data.x\"}, :y {:scale \"y\", :field \"data.y\"}, :fill {:value \"steelblue\"}, :fillOpacity {:value 1}}, :update {:shape \"circle\", :size {:value 70}, :stroke {:value \"transparent\"}}, :hover {:size {:value 210}, :stroke {:value \"white\"}}}}], :data [{:name \"47fd33be-0b88-4816-97db-f48d1016c954\", :values ({:x 2, :y 4} {:x 3, :y 14} {:x 4, :y 15} {:x 5, :y 20} {:x 6, :y 42} {:x 7, :y 60} {:x 8, :y 93} {:x 9, :y 93} {:x 10, :y 120})}], :width 400, :height 247.2188, :padding {:bottom 20, :top 10, :right 10, :left 50}}}"}
+;; <=
+
+;; @@
+());;this function uses discrete differential to find speeds 
 ;;(goliath.mathlink.LagrangianScore/InitFunctions
   ;;mathKernelSz
   ;;"resources/"
@@ -415,6 +469,10 @@ mathKernelSz
   ;;df
   ;;)
 ;; @@
+
+;; **
+;;; #Reading in data
+;; **
 
 ;; @@
 ;;this function reads in the speed accel from the initial data file
@@ -431,23 +489,23 @@ mathKernelSz
 ;;; {"type":"html","content":"<span class='clj-nil'>nil</span>","value":"nil"}
 ;; <=
 
+;; **
+;;; ## Score
+;; **
+
 ;; @@
 (defn score
   [indv] 
 	(first
       (into [] (goliath.mathlink.LagrangianScore/GetScore (into-array Integer/TYPE (vec (flatten indv))), df))
       )
-  
-  
   )
   
 ;;uncomment this to score a particular lagrangian eg coupled sho
-(into [] (goliath.mathlink.LagrangianScore/GetScore (into-array Integer/TYPE (vec (flatten [[2 0 0 0] [0 2 0 0] [1 1 0 0] [0 0 2 0] [0 0 0 2]]))), df))
-
-
+;;(into [] (goliath.mathlink.LagrangianScore/GetScore (into-array Integer/TYPE (vec (flatten [[2 0 0 0] [0 2 0 0] [1 1 0 0] [0 0 2 0] [0 0 0 2]]))), df))
 ;; @@
 ;; =>
-;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>-22.806637208404002</span>","value":"-22.806637208404002"},{"type":"html","content":"<span class='clj-double'>0.18852611579406264</span>","value":"0.18852611579406264"},{"type":"html","content":"<span class='clj-double'>0.09426300953047467</span>","value":"0.09426300953047467"},{"type":"html","content":"<span class='clj-double'>-0.18852604409117746</span>","value":"-0.18852604409117746"},{"type":"html","content":"<span class='clj-double'>-0.09426307476496294</span>","value":"-0.09426307476496294"},{"type":"html","content":"<span class='clj-double'>-0.09426304417472162</span>","value":"-0.09426304417472162"}],"value":"[-22.806637208404002 0.18852611579406264 0.09426300953047467 -0.18852604409117746 -0.09426307476496294 -0.09426304417472162]"}
+;;; {"type":"html","content":"<span class='clj-var'>#&#x27;goliath/score</span>","value":"#'goliath/score"}
 ;; <=
 
 ;; @@
@@ -456,6 +514,10 @@ mathKernelSz
 ;; =>
 ;;; {"type":"html","content":"<span class='clj-var'>#&#x27;goliath/memScore</span>","value":"#'goliath/memScore"}
 ;; <=
+
+;; **
+;;; #Generation-config
+;; **
 
 ;; @@
 (def generation-config			      
@@ -495,7 +557,7 @@ mathKernelSz
 ;; <=
 
 ;; @@
-;;(def result (read-string (slurp "results16LScore.txt") ))
+;((read-string (slurp "results16LScore.txt")))
 ;; @@
 
 ;; @@
