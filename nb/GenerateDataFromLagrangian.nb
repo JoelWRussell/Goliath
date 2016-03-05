@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[    220340,       4179]
-NotebookOptionsPosition[    217137,       4071]
-NotebookOutlinePosition[    217518,       4088]
-CellTagsIndexPosition[    217475,       4085]
+NotebookDataLength[    224853,       4318]
+NotebookOptionsPosition[    221295,       4199]
+NotebookOutlinePosition[    221676,       4216]
+CellTagsIndexPosition[    221633,       4213]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -3167,7 +3167,7 @@ rqpFSmYBQGG/F/uHqiNAbYdvKJ5h/z8yFFD6//8jQMltyEOqnABAUBfM3Q==
  CellChangeTimes->{{3.666083568796809*^9, 3.6660835965974293`*^9}, {
    3.666084042937785*^9, 3.6660840556293173`*^9}, 3.666084115243976*^9, 
    3.666084145383376*^9, 3.666084366625204*^9, 3.666084442059173*^9, 
-   3.666084475712242*^9, 3.666084514661384*^9}]
+   3.666084475712242*^9, 3.666084514661384*^9, 3.666095195157566*^9}]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -3598,7 +3598,7 @@ iCM/DIwwUCabP6LRjPfJ9WuYYqAF/wMk0Q9T
       Scaled[0.05], 
       Scaled[0.05]}},
    Ticks->{Automatic, Automatic}], TraditionalForm]], "Output",
- CellChangeTimes->{3.666084537161867*^9}]
+ CellChangeTimes->{3.666084537161867*^9, 3.666095196730501*^9}]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -4061,8 +4061,136 @@ cIk+M89wgv8e+N7oZuIplA8sGuE4gsEtNYZZFyn8H4pWuO0=
       Scaled[0.05], 
       Scaled[0.05]}},
    Ticks->{Automatic, Automatic}], TraditionalForm]], "Output",
- CellChangeTimes->{{3.666084558135623*^9, 3.666084565497282*^9}}]
+ CellChangeTimes->{{3.666084558135623*^9, 3.666084565497282*^9}, 
+   3.6660951990961037`*^9}]
 }, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"deltat1", " ", "=", " ", "0.1"}]], "Code",
+ CellChangeTimes->{3.666094575030529*^9}],
+
+Cell[BoxData[
+ FormBox["0.1`", TraditionalForm]], "Output",
+ CellChangeTimes->{3.6660945943836517`*^9, 3.666094702890818*^9, 
+  3.6660952025503798`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"times2", " ", "=", " ", 
+    RowBox[{"Range", "[", 
+     RowBox[{"0", ",", "10", ",", " ", "deltat1"}], "]"}]}], ";"}], 
+  "\n"}], "\n", 
+ RowBox[{
+  RowBox[{"expa11", " ", "=", " ", 
+   RowBox[{"Flatten", "[", 
+    RowBox[{
+     RowBox[{"D", "[", 
+      RowBox[{
+       RowBox[{"D", "[", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"th1", "[", "t", "]"}], "/.", "sol5"}], ")"}], ",", " ", 
+         "t"}], "]"}], ",", " ", "t"}], "]"}], "/.", 
+     RowBox[{"t", "\[Rule]", "times2"}]}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"expa12", " ", "=", " ", 
+   RowBox[{"Flatten", "[", 
+    RowBox[{
+     RowBox[{"D", "[", 
+      RowBox[{
+       RowBox[{"D", "[", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"x", "[", "t", "]"}], "/.", "sol5"}], ")"}], ",", " ", 
+         "t"}], "]"}], ",", " ", "t"}], "]"}], "/.", 
+     RowBox[{"t", "\[Rule]", "times2"}]}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"results2", " ", "=", " ", 
+   RowBox[{"Transpose", "[", 
+    RowBox[{"{", 
+     RowBox[{
+     "expth11", ",", " ", "expth12", ",", " ", "expw11", ",", " ", "expw12", 
+      ",", " ", "expa11", ",", " ", "expa12"}], "}"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"Export", "[", 
+   RowBox[{"\"\<spring_pendulum.csv\>\"", ",", " ", 
+    RowBox[{
+     RowBox[{"resuexpw11", " ", "=", " ", 
+      RowBox[{"Flatten", "[", 
+       RowBox[{
+        RowBox[{"D", "[", 
+         RowBox[{
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"th1", "[", "t", "]"}], "/.", "sol5"}], ")"}], ",", " ", 
+          "t"}], "]"}], "/.", 
+        RowBox[{"t", "\[Rule]", "times2"}]}], "]"}]}], ";", "lts2"}], ",", 
+    " ", "\"\<CSV\>\""}], "]"}], ";"}]}], "Code",
+ CellChangeTimes->{
+  3.6660945914958067`*^9, {3.666094656427471*^9, 3.666094662346105*^9}, {
+   3.666094779822294*^9, 3.666094861946879*^9}, {3.6660949615365562`*^9, 
+   3.666094974351802*^9}, {3.666095206645939*^9, 3.6660952530290318`*^9}}],
+
+Cell[BoxData[
+ FormBox[
+  RowBox[{
+   StyleBox[
+    RowBox[{"Transpose", "::", "nmtx"}], "MessageName"], 
+   RowBox[{
+   ":", " "}], "\<\"The first two levels of \
+\[NoBreak]\\!\\(\\*FormBox[RowBox[{\\\"(\\\", \\\"\[NoBreak]\\\", \
+RowBox[{\\\"\[LeftSkeleton]\\\", \\\"1\\\", \\\"\[RightSkeleton]\\\"}], \\\"\
+\[NoBreak]\\\", \\\")\\\"}], TraditionalForm]\\)\[NoBreak] cannot be \
+transposed. \\!\\(\\*ButtonBox[\\\"\[RightSkeleton]\\\", \
+ButtonStyle->\\\"Link\\\", ButtonFrame->None, \
+ButtonData:>\\\"paclet:ref/message/Transpose/nmtx\\\", ButtonNote -> \
+\\\"Transpose::nmtx\\\"]\\)\"\>"}], TraditionalForm]], "Message", "MSG",
+ CellChangeTimes->{3.666095002111849*^9, 3.6660952037856607`*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"expth11", " ", "=", " ", 
+   RowBox[{"Flatten", "[", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"th1", "[", "t", "]"}], "/.", "sol5"}], ")"}], "/.", 
+     RowBox[{"t", "\[Rule]", "times2"}]}], "]"}]}], ";"}]], "Code",
+ CellChangeTimes->{3.666095218504529*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"expth12", " ", "=", " ", 
+   RowBox[{"Flatten", "[", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"x", "[", "t", "]"}], "/.", "sol5"}], ")"}], "/.", 
+     RowBox[{"t", "\[Rule]", "times2"}]}], "]"}]}], ";"}]], "Code",
+ CellChangeTimes->{3.666095225519973*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"expw11", " ", "=", " ", 
+   RowBox[{"Flatten", "[", 
+    RowBox[{
+     RowBox[{"D", "[", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"th1", "[", "t", "]"}], "/.", "sol5"}], ")"}], ",", " ", 
+       "t"}], "]"}], "/.", 
+     RowBox[{"t", "\[Rule]", "times2"}]}], "]"}]}], ";"}]], "Code",
+ CellChangeTimes->{3.666095255351368*^9}],
 
 Cell[BoxData[""], "Input",
  CellChangeTimes->{{3.666083117911565*^9, 3.666083119535581*^9}}]
@@ -4070,7 +4198,7 @@ Cell[BoxData[""], "Input",
 }, Open  ]]
 },
 WindowToolbars->"EditBar",
-WindowSize->{651, 697},
+WindowSize->{783, 697},
 WindowMargins->{{Automatic, 9}, {Automatic, 3}},
 FrontEndVersion->"10.3 for Mac OS X x86 (32-bit, 64-bit Kernel) (October 9, \
 2015)",
@@ -4120,7 +4248,7 @@ Cell[43874, 842, 559, 11, 28, "Input"]
 }, Open  ]],
 Cell[CellGroupData[{
 Cell[44470, 858, 129, 1, 65, "Chapter"],
-Cell[44602, 861, 1409, 25, 46, "Input"],
+Cell[44602, 861, 1409, 25, 28, "Input"],
 Cell[46014, 888, 110, 1, 30, "Text"],
 Cell[CellGroupData[{
 Cell[46149, 893, 951, 24, 46, "Input"],
@@ -4150,7 +4278,7 @@ Cell[99347, 1935, 739, 14, 63, "Input"]
 }, Open  ]],
 Cell[CellGroupData[{
 Cell[100123, 1954, 173, 2, 65, "Chapter"],
-Cell[100299, 1958, 571, 11, 104, "Text"],
+Cell[100299, 1958, 571, 11, 86, "Text"],
 Cell[CellGroupData[{
 Cell[100895, 1973, 358, 7, 95, "Code"],
 Cell[101256, 1982, 100, 2, 28, "Output"],
@@ -4164,21 +4292,32 @@ Cell[136545, 2579, 865, 22, 50, "Code"],
 Cell[137413, 2603, 111, 1, 30, "Text"],
 Cell[CellGroupData[{
 Cell[137549, 2608, 885, 22, 50, "Code"],
-Cell[138437, 2632, 1561, 45, 58, "Output"]
+Cell[138437, 2632, 1561, 45, 35, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
 Cell[140035, 2682, 967, 25, 49, "Code"],
-Cell[141005, 2709, 24058, 460, 125, "Output"]
+Cell[141005, 2709, 24080, 460, 125, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[165100, 3174, 372, 9, 50, "Code"],
-Cell[165475, 3185, 24567, 415, 234, "Output"]
+Cell[165122, 3174, 372, 9, 50, "Code"],
+Cell[165497, 3185, 24589, 415, 234, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[190079, 3605, 365, 9, 50, "Code"],
-Cell[190447, 3616, 26555, 447, 239, "Output"]
+Cell[190123, 3605, 365, 9, 50, "Code"],
+Cell[190491, 3616, 26583, 448, 239, "Output"]
 }, Open  ]],
-Cell[217017, 4066, 92, 1, 28, "Input"]
+Cell[CellGroupData[{
+Cell[217111, 4069, 108, 2, 49, "Code"],
+Cell[217222, 4073, 152, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[217411, 4081, 2024, 58, 130, "Code"],
+Cell[219438, 4141, 697, 14, 24, "Message"]
+}, Open  ]],
+Cell[220150, 4158, 314, 9, 50, "Code"],
+Cell[220467, 4169, 312, 9, 50, "Code"],
+Cell[220782, 4180, 390, 12, 50, "Code"],
+Cell[221175, 4194, 92, 1, 28, "Input"]
 }, Open  ]]
 }, Open  ]]
 }
