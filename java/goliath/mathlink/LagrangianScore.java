@@ -96,8 +96,15 @@ public class LagrangianScore {
         //System.out.println(szPoly);
         double[] sc = exeCmdDoubleArray("scoreAndGetCoefficients[" + szPoly + ", data[[1]], data[[2]],"+df+"]");
 
-	//bestScore = (sc[0] < bestScore)? sc[0] : bestScore;
-        //System.out.println("" + bestScore);
+    
+        for (int f = 1; f< sc.length; f++){
+            if (Math.abs(sc[f])<1e-4){
+                sc[0]=30;
+                break;
+            }
+        }
+	bestScore = (sc[0] < bestScore)? sc[0] : bestScore;
+        System.out.println("" + bestScore);
 
         return sc;
 

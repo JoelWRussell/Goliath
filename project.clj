@@ -13,7 +13,19 @@
                  [semantic-csv "0.1.0-alpha1"]
                  [criterium "0.4.3"]
                  [incanter-gorilla "0.1.0"]
-                 [jlink "1.0.0"]]
+                 [jlink "1.0.0"]
+		 [commons-codec-1.9 "1.0.0"]
+		 [commons-logging-1.2 "1.0.0"]
+		 [fluent-hc-4.5.2 "1.0.0"]
+		 [httpclient-4.5.2 "1.0.0"]
+		 [httpclient-cache-4.5.2 "1.0.0"]
+		 [httpcore-4.4.4 "1.0.0"]
+		 [httpmime-4.5.2 "1.0.0"]
+		 [jna-4.1.0 "1.0.0"]
+		 [jna-platform-4.1.0 "1.0.0"]
+
+]
+		
   :java-source-paths ["java"]
   :plugins [[lein-gorilla "0.3.5"]
             [lein-localrepo "0.5.3"]]
@@ -21,4 +33,5 @@
                        ;;"-XX:+AggressiveOpts"
                        ;;"-XX:+UseFastAccessorMethods"
                        ;;"-XX:+UseCompressedOops"
-                       "-Xmx1g"])
+                       "-Xmx1g"]
+)
