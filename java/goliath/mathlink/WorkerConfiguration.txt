@@ -1,0 +1,3 @@
+MathKernelPath,c:/program files/wolfram research/mathematica/10.0/mathkernel.exe
+PackagePath,c:/Users/User/Documents/NetBeansProjects/com.lagrangianmining/
+ExperimentalData,experimental.txt

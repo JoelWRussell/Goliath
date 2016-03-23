@@ -9,7 +9,7 @@
 ;; **
 
 ;; @@
-(def experimentalDataSz "resources/mma_double.csv")
+(def experimentalDataSz "resources/mma_coupled_sho.csv")
 (def dt 0.1)
 (def df 2)
 ;; @@
@@ -82,7 +82,7 @@ sizePoly (map #(count (flatten %)) gen)]
 (.PrepareData client false df dt)
 ;; @@
 ;; =>
-;;; {"type":"html","content":"<span class='clj-unkown'>false</span>","value":"false"}
+;;; {"type":"html","content":"<span class='clj-unkown'>true</span>","value":"true"}
 ;; <=
 
 ;; @@
@@ -115,7 +115,7 @@ sizePoly (map #(count (flatten %)) gen)]
 
 ;; @@
 (def prob_inheritance 0.75) ;;to do with crossover  ;probability that terms are directly inherited from parent to child.
-(def mutate_pref1 0.95)
+(def mutate_pref1 0.98)
 (def mutate_pref2 0.8);;change 1 df within a gene  ;prob. that "gene-replace"/"gene-add" is called when mutate is called.
 (def mutate_pref3 0.2) ;; add a whole new gene/replace a term (big change)
 ;; @@
@@ -332,7 +332,7 @@ sizePoly (map #(count (flatten %)) gen)]
                      :binary-ops [{:op cross-over :repeat 40}]
                      :unary-ops [{:op mutate :repeat 20}]})
         score-functions {:complexity (fn [x] (x))
-                         :error (fn [e] e}]
+                         :error (fn [e] e)}]
     {:ea-config              ea-config
      :score-functions        score-functions
      :reporting-function     (fn [z] (print ".") (flush))}))
@@ -345,12 +345,8 @@ sizePoly (map #(count (flatten %)) gen)]
 (time (def result (evolution/run-evolution generation-config initial-zeitgeist (fn [zg gc] (>= (:age zg) 200)))))
 ;; @@
 ;; ->
-;;; ........................................................................................................................................................................................................&quot;Elapsed time: 299093.669443 msecs&quot;
-;;; 
+;;; .........................................................
 ;; <-
-;; =>
-;;; {"type":"html","content":"<span class='clj-var'>#&#x27;user/result</span>","value":"#'user/result"}
-;; <=
 
 ;; **
 ;;; Destroy all of the MathKernels on the WorkerClients.

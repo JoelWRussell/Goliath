@@ -95,6 +95,7 @@ public class GorillaClient {
             zg = (Zeitgeist)socket.ReadObject();
             if (DEBUG) System.out.println("GorillaClient: Got results zeitgeist");
            //if (DEBUG) System.out.println(zg.toString());
+           // zg.SaveToFile("zeitGorillaClient.txt");
           
             return true;
            
@@ -102,6 +103,15 @@ public class GorillaClient {
         
         return false;
 
+    }
+    public boolean ResetLagrangeServer() throws IOException{
+        socket.WriteString("RESET_SERVER");
+        String szMsg = socket.ReadString(); 
+        if (DEBUG) System.out.println(szMsg);
+        if (szMsg.equals("OK")){
+            return true;
+        }
+        else return false;  
     }
     public boolean InitMathKernel() throws IOException{
         socket.WriteString("INIT_MATH_KERNEL");

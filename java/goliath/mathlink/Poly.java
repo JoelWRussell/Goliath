@@ -33,12 +33,9 @@ public class Poly implements Serializable {
         for (int f : powers){
             sz = sz + f+" ";
         }
-        sz += "***";
-        for (double f:coefficients){
-            sz = sz + f+" ";
-        }
+       
 
-        sz += "***"+score+"\n";
+        sz += "   "+score+"\n";
         return sz;
     }
     public int[] powers;//[2 0 0 0] [0 2 0 0]  as a flat list

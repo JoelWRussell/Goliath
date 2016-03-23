@@ -19,9 +19,10 @@ public class Utility {
     static public String registerServer = "/cgi-bin/Register_Server.pl";
 
     static public String szMath = "-linkmode launch -linkname ";
-    static public String szMathPath = "c:/program files/wolfram research/mathematica/10.0/mathkernel.exe";
-    static public String szPackagePath = "C:/Users/User/Documents/NetBeansProjects/com.lagrangianmining/";//might need to look at this
-    static public String szExpData = "experimental.txt";
+    static public String szWorkerConfig = "C:/Users/User/Documents/NetBeansProjects/com.lagrangianmining/src/com/lagrangianmining/WorkerConfiguration.txt";
+    static public String szMathPath1 = "c:/program files/wolfram research/mathematica/10.0/mathkernel.exe";
+    static public String szPackagePath1 = "C:/Users/User/Documents/NetBeansProjects/com.lagrangianmining/";//might need to look at this
+    static public String szExpData1 = "experimental.txt";
 //I am so used to c++ that I need cin anc cout
       public static String cin() throws IOException{
         return  (new BufferedReader(new InputStreamReader(System.in))).readLine();    

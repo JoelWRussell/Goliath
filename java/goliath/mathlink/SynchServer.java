@@ -49,6 +49,13 @@ public class SynchServer implements Runnable {
                     String szMsg = sock.ReadString();
                     if (DEBUG) System.out.println("SychServer: Received Message="+szMsg);
                     switch (szMsg) {
+                        case "RESET_SERVER":
+                        {
+                            boolean bOK = lagrangeServer.ResetServer();
+                            if (bOK)   sock.WriteString("OK");
+                            else sock.WriteString("FAIL");                            
+                        }
+                        break;
                         case "INIT_MATH_KERNEL":
                         {                         
                             boolean bOK = lagrangeServer.InitMathKernel();

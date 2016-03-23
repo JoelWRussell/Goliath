@@ -8,7 +8,12 @@ package com.lagrangianmining;
 import static com.lagrangianmining.Utility.cout;
 import static com.lagrangianmining.Utility.registerServer;
 import static com.lagrangianmining.Utility.website;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -23,7 +28,11 @@ import org.apache.http.util.EntityUtils;
 public class LagrangeServer {
     public boolean DEBUG = true;
     public static void main(String[] Args){
-        LagrangeServer ls = new LagrangeServer();
+        LagrangeServer ls;
+        if (Args.length !=0){
+           ls = new LagrangeServer(Args[0], Integer.parseInt(Args[1]), Integer.parseInt(Args[2])); 
+        }
+        else ls = new LagrangeServer();
    
     }
     public LagrangeServer(){
@@ -65,7 +74,14 @@ public class LagrangeServer {
             if (DEBUG) cout("LagrangeServer: cannot start the server at:"+workerPort);
         }
     }
-
+    public boolean ResetServer() throws InterruptedException{
+        if (DEBUG) cout("LagrangeServer:ResetServer");
+        boolean bOK = DestroyMathKernel();
+        asynchServer.Reset();
+        return true;
+        
+        
+    }
     public boolean InitMathKernel() throws InterruptedException{
         //This function inits all of the attached client computers
         //so it can fail if during the execution some are lost, or gained
@@ -165,16 +181,25 @@ public class LagrangeServer {
     }
     public boolean NewZeitgeist(Zeitgeist zg) throws InterruptedException{
         if (DEBUG) System.out.println("LagrangeServer:NewZeitgeist");
+        //cout("#####################################################");
+        //cout("STARTING ZEITGEIST");
+        //cout(zg.toString());
+        //cout("#####################################################");
   
         int numClients = asynchServer.GetNumClients();
         if (numClients == 0 || zg==null) return false;
         if (DEBUG) System.out.println("LagrangeServer: numClients = " + numClients);
-        zg.SetNumberClients(numClients);      
+        zg.SetNumberClients(numClients);  
+        //cout("#####################################################");
+        //cout("REORGANISED ZEITGEIST WITH NUMCLIENTS");
+        //cout(zg.toString());
+        //cout("#####################################################");
         Thread[] threads = new Thread[numClients];
         ScoreRemoteHost[] remotes = new ScoreRemoteHost[numClients];
         for (int f=0; f<numClients; f++){
             remotes[f] = new ScoreRemoteHost(asynchServer.GetSocket(f), zg.GetPopulation(f));
         }
+        //System.out.println("LAGRANGESERVER-START ALL THREADS");
         for (int f=0; f<numClients; f++){
             threads[f] = new Thread(remotes[f]);
             threads[f].start();
@@ -186,12 +211,23 @@ public class LagrangeServer {
         for (int f=0; f<numClients; f++){
             bOK = bOK && remotes[f].GetStatus();
         }
+        //System.out.println("LAGRANGESERVER-FINISHED ALL THREADS");
         if (bOK){
             for (int f=0; f<numClients; f++){
                 zg.SetPopulation(f, remotes[f].GetPopulation());
             }
-            zg.FinalizeZeitgeist();
+            zg.FinalizeZeitgeist();//copies from Population to Poly
         }
+        //cout("#####################################################");
+        //cout("FINAL ZEITGEIST");
+        //cout(zg.toString());
+        //cout("#####################################################");
+        //try {
+        //    zg.SaveToFile("zeit3.txt");
+        //} catch (Exception ex) {
+        //    cout("save to file error");
+        //}
+        cout("SIZE OF ZEITGEIST "+zg.GetNumPolys());
         return bOK;
         
     }
@@ -231,7 +267,7 @@ public class LagrangeServer {
         }
         @Override public void run(){
             try {
-                if (DEBUG) System.out.println("LagrangeServer: run");
+
                 //send the population off to the client
                 socket.WriteString("PREPARE_DATA");
                 socket.WriteObject(format);
@@ -257,12 +293,10 @@ public class LagrangeServer {
         }
         @Override public void run(){
             try {
-                if (DEBUG) System.out.println("LagrangeServer: run");
-                //send the population off to the client
                 socket.WriteString("NEW_POPULATION");
                 socket.WriteObject(population);
                 population = (Population)socket.ReadObject();
-                if (DEBUG) cout(population.toString());
+               // if (DEBUG) cout(population.toString());
             } catch (Exception ex){
                 bStatus = false;
             }
@@ -352,5 +386,6 @@ public class LagrangeServer {
 
        
     } 
+ 
 
 }

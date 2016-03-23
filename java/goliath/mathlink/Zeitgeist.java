@@ -5,8 +5,17 @@
  */
 package com.lagrangianmining;
 
+import static com.lagrangianmining.Utility.cout;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -25,6 +34,11 @@ public class Zeitgeist implements Serializable {
         double[] d = zg.GetCoefficientsList();
         for (double dd: d){
             System.out.print(dd + " ");
+        }
+        try {
+            zg.SaveToFile("TestZeitgeist.txt");
+        } catch (IOException ex) {
+            Logger.getLogger(Zeitgeist.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         
@@ -70,11 +84,31 @@ public class Zeitgeist implements Serializable {
     }
     public void FinalizeZeitgeist(){
         polyList = new ArrayList<Poly>();
-        for (int f=0; f<popList.size(); f++){
-            for (int ff=0; ff<popList.get(f).polys.size(); ff++){
-                polyList.add(popList.get(f).polys.get(ff));
-            }
+        int total = 0;
+        for (int f=0; f<numClients; f++){
+            total += popList.get(f).polys.size();
+        } 
+        int[] cnt = new int[numClients];
+        for (int f=0; f<numClients; f++){
+            cnt[f] = 0;
         }
+        for (int f=0; f<total; f++){
+            polyList.add(popList.get(f%numClients).polys.get(cnt[f%numClients]));
+            cnt[f%numClients]++;
+        }
+    }
+    public void SaveToFile(String szFile) throws FileNotFoundException, IOException{
+        File fout = new File(szFile);
+	FileOutputStream fos = new FileOutputStream(fout);
+	BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+        for (int f=0; f<polyList.size(); f++){
+            bw.write(polyList.get(f).toString());
+
+        }
+        bw.close();
+    }
+    public int GetNumPolys(){
+        return polyList.size();
     }
     //SetNumberClients---partitions the polyList into an ArrayList of Populations which is each Serializable
     public void SetNumberClients(int num){
@@ -96,6 +130,8 @@ public class Zeitgeist implements Serializable {
            popList.get(f%numClients).polys.add(polyList.get(f));
           
         }
+        
+
       
     }
     //GetScoresList, GetCoefficientsList gives the results of the clients

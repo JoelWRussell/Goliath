@@ -36,6 +36,12 @@ public class AsynchServer implements Runnable{
             if (DEBUG) cout("AsychServer: Was unable to close the ServerSocket or the ObjectSockets in Finalize()");
         }
     }
+    public void Reset(){
+        for (ObjectSocket sock : sockets){
+            sock.DisconnectSocket();
+        }
+        sockets = new ArrayList<ObjectSocket>();
+    }
     @Override public void run(){
 
         try {

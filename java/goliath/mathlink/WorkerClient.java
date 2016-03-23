@@ -7,19 +7,25 @@ package com.lagrangianmining;
 
 import static com.lagrangianmining.Utility.cout;
 import static com.lagrangianmining.Utility.getServer;
-import static com.lagrangianmining.Utility.szExpData;
+import static com.lagrangianmining.Utility.szExpData1;
 import static com.lagrangianmining.Utility.szMath;
-import static com.lagrangianmining.Utility.szMathPath;
-import static com.lagrangianmining.Utility.szPackagePath;
+import static com.lagrangianmining.Utility.szMathPath1;
+import static com.lagrangianmining.Utility.szPackagePath1;
+import static com.lagrangianmining.Utility.szWorkerConfig;
 import static com.lagrangianmining.Utility.website;
 import com.wolfram.jlink.MathLinkException;
+import java.awt.Toolkit;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static javafx.application.Platform.exit;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -31,11 +37,18 @@ import org.apache.http.util.EntityUtils;
  *
  * @author User
  */
+//keep an error file so that we know
+//what the mathematica script failed at 
 public class WorkerClient {
     public boolean DEBUG = true;
     public static void main (String[] Args){
-        try {
-            WorkerClient client = new WorkerClient ();
+        try{
+        WorkerClient client;
+        if (Args.length !=0){
+           client = new WorkerClient(Args[0]); 
+        }
+        else client = new WorkerClient();
+
             client.GetServer();
             client.Start();
         } catch (Exception ex) {
@@ -50,9 +63,18 @@ public class WorkerClient {
         this("localHost");
     }
     public WorkerClient(String serverName){
+        szMathPath = szMathPath1;
+        szPackagePath = szPackagePath1;
+        szExpData = szExpData1;
+        
         cout("Starting WorkerClient");
         cout("#####################");
         cout("Worker client will init Mathematica kernel and process the population.");
+        cout("");
+        ReadConfigFile(szWorkerConfig);
+        cout("Read configuration file:"+szWorkerConfig+"(defaults in Utility.java)");
+        cout("MMAKernel="+szMathPath+"\nPackagePath=" + szPackagePath+"\nExperimentalData="+szExpData);
+        cout("");
         scorer = new MMAScorer(szMath, szMathPath, szPackagePath);
         try {
             FindServerFromWeb(serverName);
@@ -86,14 +108,13 @@ public class WorkerClient {
                     case "DESTROY_MATH_KERNEL"://destroys the mma kernel
                         DestroyMathKernel();
                         break;
-                    case "NEW_DATA"://send new data and save it to file also getdf, bSim, delat
+                    case "NEW_DATA"://
                         NewData();
                         break;
                     case "PREPARE_DATA"://load lagraniansolver.m into mma and also load data
                         PrepareData();
                         break;
                     case "NEW_POPULATION"://process part of a zeitgeist
-                        System.out.println("WorkerClient:NewPopulation");
                         NewPopulation();
                         break;
                     default:
@@ -115,8 +136,35 @@ public class WorkerClient {
         socket = null;
         throw new Exception();
     }
+    public void ReadConfigFile(String sz){
+        File file = new File(sz);
+        try(BufferedReader br = new BufferedReader(new FileReader(file))) {
+            for(String line; (line = br.readLine()) != null; ) {
+                String[] splited = line.split(",");
+                if (splited.length != 2) continue;
+                switch (splited[0]) {
+                    case "MathKernelPath":
+                        szMathPath = splited[1];
+                        break;
+                    case "PackagePath":
+                        szPackagePath = splited[1];
+                        break;
+                    case "ExperimentalData":
+                        szExpData = splited[1];
+                        break;
+                }
+            }
+
+        }catch (IOException ex) {
+             if (DEBUG) cout("WorkerClient: Cant find the configuration file, this contains info like the location \nof the math kernel, using default values in Utility.java.");
+    
+        }
+        
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
+    private String szMathPath, szPackagePath, szExpData;
     private void FindServerFromWeb(String serverName) throws IOException, Exception {
         //gets the ip:port form the www given a short name from the website
             XMLHelper xml = new XMLHelper();
@@ -147,7 +195,7 @@ public class WorkerClient {
     private void NewData() throws IOException, ClassNotFoundException, MathLinkException{
         Data data = (Data) socket.ReadObject();
         //write out this file        
-        FileOutputStream fos = new FileOutputStream(szExpData);
+        FileOutputStream fos = new FileOutputStream(szPackagePath + szExpData);
         fos.write(data.GetBytes());
         fos.close();
         if (DEBUG) cout("WorkerClient: Downloaded experimental data from server");
@@ -159,12 +207,15 @@ public class WorkerClient {
         scorer.PrepareData(szExpData, format);
     }
     private void NewPopulation() throws IOException, ClassNotFoundException, MathLinkException{
-            if (DEBUG) System.out.println("LagrangeServer:NewPopulation");
+            if (DEBUG) System.out.println("WorkerClient:NewPopulation");
             //can only run if the experimental data is available
             Population population = (Population) socket.ReadObject();
-            if (DEBUG) cout(population.toString());
-            population = scorer.ProcessPopulation(population);
+            scorer.ProcessPopulation(population);
+            if (DEBUG) System.out.println("Population size: "+population.polys.size());
+            //cout("WORKERCLIENT:START_SLEEP");
+            //Toolkit.getDefaultToolkit().beep();
             socket.WriteObject(population);
+            cout("WORKERCLIENT:PROCESSED_POPULATION");
   
         
     }

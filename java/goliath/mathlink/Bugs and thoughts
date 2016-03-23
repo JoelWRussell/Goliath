@@ -1,0 +1,102 @@
+
+///////////////////////////////////////////////////////////////////////////////
+//Passing by reference and value in Java
+///////////////////////////////////////////////////////////////////////////////
+When you send anything to a function you pass by value. So copies of primitives 
+are sent. But also copies of references. Which are really pointers, or something
+very close to pointers. So since I have a copy of the address of the object
+I can use the . which is basically -> C++ to call functions on it and to change
+values within it. So I can use and modify the object with a function.
+Object obj;
+InitFn(obj);
+
+The obj is now initialised.
+The thing that has been copied onto the stack is the address of the object itself.
+Not the memory that is the object. Within the function:
+void fn(Object obj){
+obj.changeValues();//this will use the pointer obj to alter the object itself
+//but since obj is a reference type ie a pointer I can also
+obj = new ObjectOfSomeSorts();
+//But now I have lost the original address, it has been replaced by this one 
+//which has just been created on the heap. 
+//The function had a local variable called obj which had been given the value
+//or the original object outside of the function. Now that information has been
+//lost. There is no longer any way to communicate with the external object.
+//the local variable is limited to the scope of this fuction call and will 
+//disappear when the call is over.
+}
+CONCLUSION
+You can use a function to alter an object, or call its functions on itself. But
+you cannot use a function to assign it to a new object.
+So you cant implement a swap(&x, &y) function because this would involve reassigning
+x and y. But what you could do would be to swap to members of an object eg swap(obj)
+which would cause obj.x and obj.y to swap.
+////////////////////////////////////////////////////////////////////////////////
+//Issue with multiple WorkerClients
+////////////////////////////////////////////////////////////////////////////////
+With 1 WorkerClient the program seems to be the same as the previous Hybrid4.
+As soon as there is a second WorkerClient then suddently it doesnt work and in
+fact seems to collapses to monomial Polys with positive scores. Whereas when
+no aspect of the GA is channged this is not the case for 1 WorkerClient. Hence
+it is nothing to do with the GA and purely the networking code.
+
+Recap:
+
+GA sends a zeitgeist to GorillaClient. Which sends it on to SychServer. This seems 
+likely to be OK or else it would not have worked with the 1 WorkerClient option.
+SychServer then passes it to LagrangeServer which instantiates a set of innerclasses
+to process each population. The zeitgeist is broken up into separate populations
+depending on the number or WorkerClients which have registered. Each socket is given a population
+and the are sent to the WorkerClients for processing.
+It is likely that the WorkerClient and MMAScorer and mma script side of the code are
+OK. Or else again the single client would not have worked. The WorkerClient returns
+the populations which when all of the threads of the innerclasses are finished are
+combined to make a new zeitgeist. The populations are copied back into a polynomial list.
+The zeitgeist is then sent to GorillaClient. The GA code can then ask for the scores
+and the coefficients.
+
+So it seems likely that GA->GorillaClient->SychServer->LagrangeServer is OK.
+Also WorkerClient->MMAScorer->mma is OK.
+So the problem then must be the splitting up of the zeitgeist into populations,
+sending each through and recolating the results. This must (given that 1 works)
+be causing the strange behaviour.
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+Tested this by adding a random sleep to each worker thread before it returned the
+data and then having it beep when it sent the data. The timing and the concurrency
+does not seem to be a problem. LagrangeServer is waiting until it has the results
+of all of its WorkerClients before sending off the results. I have checked this with
+4 WorkerClients. Also what is sent by the WorkerClient is received by the LagrangeServer.
+So it isnt the innerclasses and the asynchserver. They are interacting OK with the
+WorkerClients and correctly gathering the results. It must therefore be the 
+collation or something to do with the LagrangeServer.
+/////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
+Each zg as it is returned to gorillaclient has a poly list of 100. By saving the 
+completed zg list with 1 or 2 or 3 clients it does not appear to be different after a run of 1 gen.
+/////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
+Is the zg that returns to Gorilla the same as that returned to LagrangeServer
+//////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+The GorillaClient is the same as the LagrangeServer. It seems that it is OK
+along all parts of the chain. There does not appear to be a problem. The zg
+received by GorillaClient - is the same that is contains the same set of Polys
+albeit in a different order.
+/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+If the order is changed then when GetScores is called the [] will be different to the 
+order of the polys........ Hence the scores will almost be a random permutation of scores.
+Hence we get the output we would expect if the score had no relationship to the 
+fitness of the poly. Hence it stays the same.
+Need to arrange it so that the order of the polys is preserved.
+Hence only the complexity can be used to rank the polys - so we quickly evolve
+the smallest.
+/////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
+I think it is the FinaliseZeitgeist function does not reconstruct the original order.
+///////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+By random chance a lone you never get below -3
+//////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
