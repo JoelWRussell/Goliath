@@ -219,8 +219,8 @@ public class LagrangeServer {
             zg.FinalizeZeitgeist();//copies from Population to Poly
         }
         //cout("#####################################################");
-        //cout("FINAL ZEITGEIST");
-        //cout(zg.toString());
+        cout("FINAL ZEITGEIST");
+        cout(zg.toString());
         //cout("#####################################################");
         //try {
         //    zg.SaveToFile("zeit3.txt");

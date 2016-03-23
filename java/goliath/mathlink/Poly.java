@@ -28,8 +28,16 @@ public class Poly implements Serializable {
      
         score = 10000;
     }
+    @Override public boolean equals(Object pl){
+        if (powers.length != ((Poly)pl).powers.length) return false;
+        for (int f=0; f<powers.length; f++){
+            if (powers[f] != ((Poly)pl).powers[f]) return false;
+        }
+        return true;
+    }
     @Override public String toString(){
         String sz="";
+        
         for (int f : powers){
             sz = sz + f+" ";
         }

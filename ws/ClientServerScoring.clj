@@ -50,22 +50,27 @@
 ;; <=
 
 ;; @@
-(.NewData client "resources/mma_double.csv") ;;transfers the experimental data across to all of the WorkerClients
+(.NewData client "resources/sho_coupled_0.1_sim.csv") ;;transfers the experimental data across to all of the WorkerClients
 ;; @@
 ;; =>
 ;;; {"type":"html","content":"<span class='clj-unkown'>true</span>","value":"true"}
 ;; <=
 
 ;; @@
-(.PrepareData client false 2 0.1) ;;tells the WorkerClients to load the PrepareDataCompact.m script file
+(.PrepareData client true 2 0.1) ;;tells the WorkerClients to load the PrepareDataCompact.m script file
 ;; @@
 ;; =>
 ;;; {"type":"html","content":"<span class='clj-unkown'>true</span>","value":"true"}
 ;; <=
 
 ;; @@
-(def polyLength (into-array Integer/TYPE [4 4 4]))
-(def poly (into-array Integer/TYPE [1 1 1 1  2 2 2 2 1 2 1 2]))
+;;(.ResetLagrangeServer client) ;;this will destroy and restart the remote LagrangeServer
+;;all of the workers will reconnect
+;; @@
+
+;; @@
+(def polyLength (into-array Integer/TYPE [20]))
+(def poly (into-array Integer/TYPE [2 0 0 0 0 2 0 0 1 1 0 0 0 0 2 0 0 0 0 2]))
 (def deltat 0.1)
 (def df 2)
 
@@ -75,7 +80,7 @@
 ;; <=
 
 ;; @@
-(.NewZeitgeist client 3 polyLength poly df deltat );;score the zeitgeist with the netwrok
+(.NewZeitgeist client 1 polyLength poly df deltat );;score the zeitgeist with the netwrok
 ;; @@
 ;; =>
 ;;; {"type":"html","content":"<span class='clj-unkown'>true</span>","value":"true"}
@@ -85,14 +90,14 @@
 (into [] (.GetScores client))
 ;; @@
 ;; =>
-;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>14.072445026423615</span>","value":"14.072445026423615"},{"type":"html","content":"<span class='clj-double'>22.928462152877966</span>","value":"22.928462152877966"},{"type":"html","content":"<span class='clj-double'>18.157463275646037</span>","value":"18.157463275646037"}],"value":"[14.072445026423615 22.928462152877966 18.157463275646037]"}
+;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>-22.806634470647438</span>","value":"-22.806634470647438"}],"value":"[-22.806634470647438]"}
 ;; <=
 
 ;; @@
 (into [] (.GetCoefficients client))
 ;; @@
 ;; =>
-;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>8.129417044365265</span>","value":"8.129417044365265"},{"type":"html","content":"<span class='clj-double'>261.3891625397806</span>","value":"261.3891625397806"},{"type":"html","content":"<span class='clj-double'>39.27242908652074</span>","value":"39.27242908652074"}],"value":"[8.129417044365265 261.3891625397806 39.27242908652074]"}
+;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>0.18854088335408387</span>","value":"0.18854088335408387"},{"type":"html","content":"<span class='clj-double'>0.09427039337015511</span>","value":"0.09427039337015511"},{"type":"html","content":"<span class='clj-double'>-0.188540811738729</span>","value":"-0.188540811738729"},{"type":"html","content":"<span class='clj-double'>-0.09427045853381483</span>","value":"-0.09427045853381483"},{"type":"html","content":"<span class='clj-double'>-0.09427042790594096</span>","value":"-0.09427042790594096"}],"value":"[0.18854088335408387 0.09427039337015511 -0.188540811738729 -0.09427045853381483 -0.09427042790594096]"}
 ;; <=
 
 ;; @@

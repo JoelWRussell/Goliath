@@ -49,12 +49,14 @@ public class Zeitgeist implements Serializable {
          popList = new ArrayList<Population>();
     }
     @Override public String toString(){
-        String sz = "POLY LIST*****\n";
-        for (Poly p : polyList){
-            sz += p.toString();
-        }
-        sz += "*********\n";
-        sz += "POP LIST*****\n";
+        
+        String sz = "";
+//        sz += "POLY LIST*****\n";
+//        for (Poly p : polyList){
+//            sz += p.toString();
+//        }
+//        sz += "*********\n";
+//        sz += "POP LIST*****\n";
         for (Population p : popList){
             sz += p.toString();
         }

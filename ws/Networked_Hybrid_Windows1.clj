@@ -9,7 +9,7 @@
 ;; **
 
 ;; @@
-(def experimentalDataSz "resources/mma_coupled_sho.csv")
+(def experimentalDataSz "resources/sho_coupled_0.1_sim.csv")
 (def dt 0.1)
 (def df 2)
 ;; @@
@@ -40,11 +40,25 @@
 ;; **
 
 ;; @@
+;;test1: if this score function returns random scores does the clj + darwin work ok
+;;result1: only very small polys get through which suggests it is not the scorer causing that effect
+
+;;test2: how many polys are in the :elite and how many are in the :rabble
+
+
+
+
+
 (defn networkScore [gen]
 (let[
 sizePoly (map #(count (flatten %)) gen)]
 (.NewZeitgeist user/client (count gen) (into-array Integer/TYPE sizePoly) (into-array Integer/TYPE (flatten gen)) user/df, user/dt)
 (do (into [] (.GetScores user/client)))
+  
+;;test1  (repeatedly (count gen) #(Math/random))
+  
+;;test2  
+ ;; (do (println((str "" (count gen)))) (repeatedly (count gen) #(Math/random)) )
 )
 )
 ;; @@
@@ -68,7 +82,7 @@ sizePoly (map #(count (flatten %)) gen)]
 ;; **
 
 ;; @@
-(.NewData client "resources/mma_double.csv")
+(.NewData client "resources/sho_coupled_0.1_sim.csv")
 ;; @@
 ;; =>
 ;;; {"type":"html","content":"<span class='clj-unkown'>true</span>","value":"true"}
@@ -79,7 +93,7 @@ sizePoly (map #(count (flatten %)) gen)]
 ;; **
 
 ;; @@
-(.PrepareData client false df dt)
+(.PrepareData client true df dt)
 ;; @@
 ;; =>
 ;;; {"type":"html","content":"<span class='clj-unkown'>true</span>","value":"true"}
@@ -115,7 +129,7 @@ sizePoly (map #(count (flatten %)) gen)]
 
 ;; @@
 (def prob_inheritance 0.75) ;;to do with crossover  ;probability that terms are directly inherited from parent to child.
-(def mutate_pref1 0.98)
+(def mutate_pref1 0.8)
 (def mutate_pref2 0.8);;change 1 df within a gene  ;prob. that "gene-replace"/"gene-add" is called when mutate is called.
 (def mutate_pref3 0.2) ;; add a whole new gene/replace a term (big change)
 ;; @@
@@ -147,9 +161,9 @@ sizePoly (map #(count (flatten %)) gen)]
     
     (if (or (< spmax sp) (= new-gene (vec (replicate length 0)) )) 
       
-      ;(assoc (vec (repeat length 0)) (rand-int length) 1);;;;;;change here
+      (assoc (vec (repeat length 0)) (rand-int length) 1)
     
-      (new-poly-term max_pow spmax length)
+      ;(new-poly-term max_pow spmax length)
       ;[0 1];;cant have this or else it will crash the mathematica
       new-gene
       )
@@ -342,22 +356,18 @@ sizePoly (map #(count (flatten %)) gen)]
 ;; <=
 
 ;; @@
-(time (def result (evolution/run-evolution generation-config initial-zeitgeist (fn [zg gc] (>= (:age zg) 200)))))
+(time (def result (evolution/run-evolution generation-config initial-zeitgeist (fn [zg gc] (print (:age zg)) (>= (:age zg) 0)))))
 ;; @@
-;; ->
-;;; .........................................................
-;; <-
 
 ;; **
-;;; Destroy all of the MathKernels on the WorkerClients.
+;;; Destr
+;;; 
+;;; all of the MathKernels on the WorkerClients.
 ;; **
 
 ;; @@
 (.DestroyMathKernel client)
 ;; @@
-;; =>
-;;; {"type":"html","content":"<span class='clj-unkown'>true</span>","value":"true"}
-;; <=
 
 ;; **
 ;;; Break link with LagrangeServer.
@@ -370,114 +380,144 @@ sizePoly (map #(count (flatten %)) gen)]
 ;;; {"type":"html","content":"<span class='clj-nil'>nil</span>","value":"nil"}
 ;; <=
 
+;; @@
+(count (:elite result))
+
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-unkown'>100</span>","value":"100"}
+;; <=
+
+;; @@
+(count (:rabble result))
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-unkown'>100</span>","value":"100"}
+;; <=
+
+;; @@
+(:age result)
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-long'>1</span>","value":"1"}
+;; <=
+
 ;; **
 ;;; Get Results
 ;; **
 
 ;; @@
+0
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-long'>0</span>","value":"0"}
+;; <=
+
+;; @@
 (mapv #(println (:genotype %)) (sort-by :error (:rabble result)))
+
 ;; @@
 ;; ->
-;;; [[1 7 1 3]]
-;;; [[2 1 6 1]]
-;;; [[1 5 3 1]]
-;;; [[1 4 3 1]]
-;;; [[3 1 2 2] [0 1 1 5]]
-;;; [[3 1 5 0]]
-;;; [[2 0 0 6]]
-;;; [[1 5 1 3]]
-;;; [[1 0 4 1]]
-;;; [[6 3 0 1]]
-;;; [[4 1 1 0]]
-;;; [[5 1 0 3]]
-;;; [[4 1 3 0]]
-;;; [[5 0 2 0]]
-;;; [[3 1 0 1]]
-;;; [[3 2 2 3] [6 2 1 0]]
-;;; [[5 1 0 3] [0 0 0 8]]
-;;; [[2 4 1 3] [0 0 0 8]]
-;;; [[0 8 0 1]]
-;;; [[0 6 1 3]]
-;;; [[0 0 0 8]]
-;;; [[3 0 4 3]]
-;;; [[0 0 0 8]]
-;;; [[7 6 0 0]]
-;;; [[0 5 2 2]]
-;;; [[0 0 0 8]]
-;;; [[2 5 0 3]]
-;;; [[0 1 1 4]]
-;;; [[2 5 0 3]]
-;;; [[2 5 2 1]]
-;;; [[1 0 0 6]]
+;;; [[1 4 4 1] [0 6 0 4]]
+;;; [[0 1 2 4]]
+;;; [[5 0 1 0]]
+;;; [[3 4 1 1] [0 6 0 4] [0 1 2 3]]
+;;; [[3 4 1 7] [2 0 3 3] [0 1 2 3]]
+;;; [[0 0 3 0] [5 1 3 0]]
+;;; [[3 1 2 3]]
+;;; [[6 0 4 0] [2 1 5 6]]
+;;; [[3 4 2 1] [0 0 3 3]]
+;;; [[0 0 5 0]]
+;;; [[2 0 4 0] [2 1 5 6]]
+;;; [[3 4 2 1]]
+;;; [[3 4 2 1]]
+;;; [[3 5 0 2]]
+;;; [[2 1 1 4]]
+;;; [[5 0 1 0]]
+;;; [[1 4 2 2]]
+;;; [[6 1 2 2]]
+;;; [[4 4 0 1]]
 ;;; [[1 0 0 0]]
-;;; [[0 5 2 2]]
-;;; [[0 1 4 5]]
-;;; [[2 2 0 4]]
-;;; [[0 0 0 8]]
-;;; [[3 0 4 3]]
-;;; [[2 5 2 1]]
-;;; [[2 1 2 2]]
-;;; [[0 0 0 8]]
-;;; [[2 3 2 2]]
-;;; [[0 5 2 2]]
-;;; [[1 0 0 6]]
-;;; [[0 5 2 2]]
-;;; [[1 2 0 1]]
-;;; [[2 2 0 4]]
-;;; [[2 5 1 1]]
-;;; [[1 5 1 0]]
-;;; [[4 2 1 2]]
-;;; [[0 0 0 8]]
-;;; [[3 3 0 3]]
-;;; [[1 6 0 2]]
-;;; [[2 1 2 2]]
-;;; [[1 0 0 0]]
-;;; [[1 5 3 0]]
-;;; [[8 0 1 0]]
-;;; [[0 0 0 8]]
-;;; [[1 0 3 5]]
-;;; [[3 2 2 3]]
-;;; [[3 0 4 3]]
-;;; [[2 2 0 4]]
-;;; [[3 0 4 3]]
-;;; [[2 5 2 1]]
-;;; [[0 7 2 0]]
-;;; [[1 6 0 2]]
-;;; [[2 0 1 1]]
-;;; [[1 2 0 1]]
-;;; [[3 0 0 7]]
-;;; [[1 2 0 1]]
-;;; [[2 3 2 2]]
-;;; [[3 3 0 3]]
-;;; [[2 5 1 1]]
-;;; [[0 3 0 7]]
-;;; [[1 6 0 2]]
-;;; [[0 0 6 3]]
-;;; [[3 0 4 3]]
-;;; [[1 0 0 6]]
-;;; [[1 5 3 0]]
-;;; [[1 0 0 0]]
-;;; [[0 4 2 0]]
-;;; [[3 2 2 3]]
-;;; [[2 5 2 1]]
-;;; [[0 0 0 8]]
-;;; [[0 0 0 8]]
-;;; [[0 4 0 1]]
-;;; [[3 2 2 3]]
-;;; [[2 0 1 7]]
-;;; [[0 5 2 2]]
-;;; [[1 0 0 0]]
-;;; [[0 5 2 2]]
-;;; [[0 0 0 8]]
-;;; [[3 0 0 7]]
-;;; [[0 0 0 8]]
-;;; [[3 2 2 3]]
-;;; [[4 2 1 2]]
-;;; [[2 3 2 2]]
-;;; [[1 6 0 2]]
-;;; [[1 5 3 0]]
-;;; [[3 3 0 3]]
-;;; [[1 2 0 1]]
+;;; [[0 0 3 0] [0 5 1 3]]
+;;; [[2 0 3 0] [0 3 1 5]]
+;;; [[6 1 2 0]]
+;;; [[2 6 7 0] [0 1 2 4]]
+;;; [[6 1 3 0]]
+;;; [[6 1 2 2] [0 1 2 4]]
+;;; [[0 1 2 4]]
+;;; [[5 1 2 0]]
+;;; [[0 0 3 0]]
+;;; [[5 0 1 0]]
+;;; [[2 0 3 3] [0 1 2 4]]
+;;; [[4 0 2 3]]
+;;; [[2 6 7 0]]
+;;; [[3 3 1 3] [0 1 2 4]]
+;;; [[3 4 2 1] [0 0 3 3]]
+;;; [[5 0 1 0]]
+;;; [[2 0 0 0]]
+;;; [[6 0 2 2]]
+;;; [[6 1 2 2]]
+;;; [[6 0 2 2]]
+;;; [[5 1 0 1]]
+;;; [[6 0 2 2]]
+;;; [[2 6 7 0]]
+;;; [[3 3 1 3] [2 5 2 1]]
+;;; [[2 6 5 0]]
+;;; [[1 1 5 0]]
+;;; [[3 5 0 2]]
+;;; [[0 1 2 4]]
+;;; [[2 0 3 0] [0 3 1 5]]
+;;; [[6 0 2 2] [0 1 2 4]]
+;;; [[0 1 2 4]]
+;;; [[2 0 3 0] [3 5 0 2]]
+;;; [[2 0 3 3] [3 4 1 1] [0 5 2 3] [0 1 2 3]]
+;;; [[6 1 2 2]]
+;;; [[2 0 4 0] [2 1 5 2]]
+;;; [[2 0 1 6]]
+;;; [[1 0 6 2]]
+;;; [[2 0 3 0] [5 1 0 4]]
+;;; [[5 0 1 0]]
+;;; [[1 3 0 1]]
+;;; [[0 7 3 0] [5 1 3 0] [0 1 2 3]]
+;;; [[5 1 3 0]]
+;;; [[0 1 4 0]]
+;;; [[2 0 1 0] [0 1 2 4]]
+;;; [[3 4 2 1]]
+;;; [[3 4 2 1]]
+;;; [[0 7 3 0]]
+;;; [[4 2 2 0] [5 0 1 0]]
+;;; [[2 6 7 0]]
+;;; [[5 0 1 0]]
+;;; [[2 6 7 0]]
+;;; [[2 1 5 2]]
+;;; [[2 6 7 0]]
+;;; [[2 4 2 0] [5 1 3 0]]
+;;; [[6 0 2 2]]
+;;; [[2 0 3 0] [6 1 1 1]]
+;;; [[3 1 2 3]]
+;;; [[3 3 2 0]]
+;;; [[2 0 3 0] [6 1 2 0]]
+;;; [[1 0 5 1] [0 0 5 0] [3 3 1 3]]
+;;; [[0 0 5 0] [0 1 2 4]]
+;;; [[2 2 0 2]]
+;;; [[6 0 2 2]]
+;;; [[0 3 2 1] [0 1 2 4]]
+;;; [[1 0 3 2]]
+;;; [[0 0 3 0]]
+;;; [[6 0 2 2] [0 1 2 4]]
+;;; [[5 0 0 5] [5 1 3 0]]
+;;; [[2 0 3 3] [3 4 1 1]]
+;;; [[0 0 5 0] [0 1 2 4]]
+;;; [[1 0 6 2]]
+;;; [[0 7 3 0] [0 0 6 2]]
+;;; [[3 3 1 3]]
+;;; [[2 0 3 0] [0 3 1 5]]
+;;; [[5 1 3 0]]
+;;; [[5 0 0 5]]
+;;; [[3 1 2 3]]
+;;; [[4 4 2 0]]
+;;; [[0 6 0 4]]
+;;; [[0 0 5 0] [0 1 2 4]]
 ;;; 
 ;; <-
 ;; =>

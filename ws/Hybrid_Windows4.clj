@@ -387,13 +387,20 @@ mathKernelSz
   
   )
   
-;;uncomment this to score a particular lagrangian eg coupled sho
-;;(into [] (goliath.mathlink.LagrangianScore/GetScore (into-array Integer/TYPE (vec (flatten [[2 0 0 ;;0] [0 2 0 0] [1 1 0 0] [0 0 2 0] [0 0 0 2]]))), df))
+
 
 
 ;; @@
 ;; =>
 ;;; {"type":"html","content":"<span class='clj-var'>#&#x27;goliath/score</span>","value":"#'goliath/score"}
+;; <=
+
+;; @@
+;;uncomment this to score a particular lagrangian eg coupled sho
+(into [] (goliath.mathlink.LagrangianScore/GetScore (into-array Integer/TYPE (vec (flatten [[2 0 0 0] [0 2 0 0] [1 1 0 0] [0 0 2 0] [0 0 0 2]]))), df))
+;; @@
+;; =>
+;;; {"type":"list-like","open":"<span class='clj-vector'>[</span>","close":"<span class='clj-vector'>]</span>","separator":" ","items":[{"type":"html","content":"<span class='clj-double'>-22.806634470647438</span>","value":"-22.806634470647438"},{"type":"html","content":"<span class='clj-double'>0.18854088335408387</span>","value":"0.18854088335408387"},{"type":"html","content":"<span class='clj-double'>0.09427039337015511</span>","value":"0.09427039337015511"},{"type":"html","content":"<span class='clj-double'>-0.188540811738729</span>","value":"-0.188540811738729"},{"type":"html","content":"<span class='clj-double'>-0.09427045853381483</span>","value":"-0.09427045853381483"},{"type":"html","content":"<span class='clj-double'>-0.09427042790594096</span>","value":"-0.09427042790594096"}],"value":"[-22.806634470647438 0.18854088335408387 0.09427039337015511 -0.188540811738729 -0.09427045853381483 -0.09427042790594096]"}
 ;; <=
 
 ;; @@

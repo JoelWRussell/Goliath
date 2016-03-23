@@ -25,7 +25,7 @@ public class Population implements Serializable {
     @Override public String toString(){
         String sz = "Population##\n";
         for (Poly p : polys){
-            sz += p.toString();
+           if (p.score<0) sz += p.toString();
         }
     
         return sz;

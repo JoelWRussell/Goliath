@@ -41,3 +41,15 @@
 	yy (map #(merge %1 %2) individuals xx)]
 	yy
 ))
+
+;;test3 do random scores result in poly truncation
+;;(defn update-scores
+;;  "Update the scores for each individual in the given list. See above for how the score functions are
+;;   specified."
+;;  [individuals score-funcs]
+;; (let [gen (map :genotype individuals)
+;;	res gen ;;(user/networkScore gen)
+;;	xx (map (fn[x1 x2] (hash-map :complexity (count (flatten x1)) :error (Math/random))) gen res)
+;;	yy (map #(merge %1 %2) individuals xx)]
+;;	yy
+;;))

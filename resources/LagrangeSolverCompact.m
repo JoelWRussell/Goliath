@@ -63,6 +63,8 @@ Plus@@((score/.toData)/.p)
 
 generateScore[vars_,l_,trajectory_,controlTrj_]:=Log[(10^-10+Expand[pathSum[vars,generateELScore[vars][l],trajectory]])/(10^-10+Expand[pathSum[vars,generateELScore[vars][l],controlTrj]]) targetUnity[Expand[pathSum[vars,generateNScore[vars][l],controlTrj]]]targetUnity[Expand[pathSum[vars,generateELScore[vars][l],controlTrj]]]]
 
+
+
 nmSolve[scoreExpression_,coeffs_,model_]:=Module[{sol},
 err={};step=0;eval=0;dimensions=Length[coeffs];bestModel=0;
 sol=FindMinimum[scoreExpression,

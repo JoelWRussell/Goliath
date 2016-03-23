@@ -60,6 +60,17 @@ public class MMAScorer {
     public void ProcessPopulation(Population population) {
         if (DEBUG) cout("MMScorer:ProcessPopulation");
         for (int f=0; f<population.polys.size(); f++){
+            /////////////////new code/////////////////////////////
+            boolean bFound = false;
+            for (int ff=0; ff<f; ff++){
+                if (population.polys.get(f)==population.polys.get(ff)){
+                    population.polys.set(f, population.polys.get(ff));
+                    bFound = true;
+                    break;
+                }
+            }
+            if (bFound) continue;
+            ///////////////////////////////////////////////////////
             Poly pl = population.polys.get(f);
 
                 double[] res;
